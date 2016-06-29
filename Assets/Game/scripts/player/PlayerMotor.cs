@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMotor : MonoBehaviour {
-
-    //How far the player can be from the ground to jump.
-    [SerializeField]
-    private float GroundDistance;
 
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
@@ -27,19 +22,12 @@ public class PlayerMotor : MonoBehaviour {
         velocity = _velocity;
     }
 
-    public void Jump()
-    {
-        if(IsGrounded())
-        {
-            velocity.y = controller.jumpVelocity;
-        }
-    }
-
     //Perform movement based on velocity variable
     void PerformMovement()
     {
         if (velocity != Vector3.zero)
         {
+            rb.velocity = Vector3.zero;
             rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
         }
 
@@ -49,9 +37,4 @@ public class PlayerMotor : MonoBehaviour {
     void Update () {
         PerformMovement();
 	}
-
-    bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, -Vector3.up, GroundDistance + 0.1f);
-    }
 }
