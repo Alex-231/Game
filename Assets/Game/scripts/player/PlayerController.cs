@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     private float speed = 5f;
     [SerializeField]
+    public float jumpVelocity = 5f;
+    [SerializeField]
     private float lookSensitivity = 3f;
 
     [SerializeField]
@@ -83,10 +85,15 @@ public class PlayerController : MonoBehaviour {
         Vector3 _movHorizontal = transform.right * _xMov;
         Vector3 _movVertical = transform.forward * _zMov;
 
-        // Final movement vector
+        // Add movement to velocity vector.
         Vector3 _velocity = (_movHorizontal + _movVertical).normalized * speed;
 
         //Apply movement
         motor.Move(_velocity);
+
+        if (Input.GetButton ("Jump"))
+        {
+            motor.Jump();
+        }
     }
 }
