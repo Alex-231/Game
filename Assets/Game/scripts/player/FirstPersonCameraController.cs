@@ -12,7 +12,8 @@ public class FirstPersonCameraController : MonoBehaviour {
     CharacterController characterController;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         camController = GetComponent<CameraController>();
         characterController = GetComponent<CharacterController>();
@@ -28,6 +29,8 @@ public class FirstPersonCameraController : MonoBehaviour {
 
         //Activate the camera.
         cam.SetActive(true);
+
+        ResetRotation();
 
     }
 
@@ -86,5 +89,10 @@ public class FirstPersonCameraController : MonoBehaviour {
             _bufferedRot.x = 270 + camController.thirdPersonCamSettings.xAxisBuffer;
         }
         cam.transform.localEulerAngles = _bufferedRot;
+    }
+
+    void ResetRotation()
+    {
+        cam.transform.localEulerAngles = Vector3.zero;
     }
 }
