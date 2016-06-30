@@ -7,6 +7,7 @@ public class MovementController : MonoBehaviour
 
     public movementAndRotationSettings movSettings;
     public jumpingAndFallingSettings jumpSettings;
+    ThirdPersonCameraController camController;
 
     [System.Serializable]
     public class movementAndRotationSettings
@@ -147,6 +148,16 @@ public class MovementController : MonoBehaviour
         }
         // Apply gravity
         moveDirection.y -= jumpSettings.gravity * Time.deltaTime;
+
+        //If the character is moving, center the camera and update rotation
+        camController = GetComponent<ThirdPersonCameraController>();
+        if (inputX != 0 || inputY != 0 && camController != null)
+        {
+            Debug.Log("test");
+
+            gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
+            camController.CenterRotation();
+        }
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
         grounded = (characterController.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;

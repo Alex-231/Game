@@ -6,14 +6,14 @@ public class FirstPersonCameraController : CameraController
 {
     FirstPersonCameraController()
     {
-        base.camStartingPos = new Vector3(0, 1f, 0);
+        base.pointStartingPos = new Vector3(0, 1f, 0);
     }
 
     // Update is called once per frame
     void Update () {
         RotatePlayer();
         RotateCamera();
-        CorrectCameraRotation();
+        CorrectCameraRotation(cam.transform.rotation, true);
     }
 
     void RotatePlayer()

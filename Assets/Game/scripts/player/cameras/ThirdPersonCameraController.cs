@@ -5,16 +5,17 @@ using System.Collections;
 public class ThirdPersonCameraController : CameraController
 {
     //override position and rotation in construct.
-    public ThirdPersonCameraController()
+    ThirdPersonCameraController()
     {
         base.camStartingPos = new Vector3(0, 0, -5f);
+        base.pointStartingPos = new Vector3(0, 1f, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
         RotateCamera();
-        CorrectCameraRotation();
+        CorrectCameraRotation(camPoint.transform.rotation, false);
         UpdateCameraDistance();
     }
 
@@ -62,5 +63,10 @@ public class ThirdPersonCameraController : CameraController
     void ChangeCameraOffset(float newLocation)
     {
         cam.transform.localPosition = new Vector3(0, 0, newLocation);
+    }
+
+    public void CenterRotation()
+    {
+        camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
     }
 }

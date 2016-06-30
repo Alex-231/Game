@@ -42,10 +42,9 @@ abstract public class CameraController : MonoBehaviour
         camPoint.transform.localEulerAngles = pointStartingRot;
     }
 
-    public void CorrectCameraRotation()
+    public void CorrectCameraRotation(Quaternion _transformRot, bool local)
     {
         //Prevents rotation on the Z axis.
-        Quaternion _transformRot = camPoint.transform.rotation;
         _transformRot.eulerAngles = new Vector3(_transformRot.eulerAngles.x, _transformRot.eulerAngles.y, 0);
 
         camPoint.transform.rotation = _transformRot;
@@ -63,6 +62,13 @@ abstract public class CameraController : MonoBehaviour
             _bufferedRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
         }
 
-        camPoint.transform.eulerAngles = _bufferedRot;
+        if(local)
+        {
+            camPoint.transform.localEulerAngles = _bufferedRot;
+        }
+        else
+        {
+            camPoint.transform.eulerAngles = _bufferedRot;
+        }
     }
 }
