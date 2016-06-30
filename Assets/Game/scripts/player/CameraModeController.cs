@@ -50,6 +50,18 @@ public class CameraModeController : MonoBehaviour
         SwitchCameraMode();
     }
 
+    //The method the player uses to change mode.
+    void ChangeCameraMode()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            if(cameraMode == CameraModes.FirstPerson)
+                cameraMode = CameraModes.ThirdPerson;
+            else
+                cameraMode = CameraModes.FirstPerson;
+        }
+    }
+
     void SwitchCameraMode()
     {
         DeactivateAllCameras();
@@ -86,6 +98,7 @@ public class CameraModeController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        ChangeCameraMode();
 
         if (activeCamera != cameraMode)
         {
