@@ -3,6 +3,14 @@
 [RequireComponent(typeof(CharacterController))]
 abstract public class CameraController : MonoBehaviour
 {
+    //These values represent local positions and rotations!
+    [Header("Camera Point")]
+    public Vector3 pointStartingPos = Vector3.zero;
+    public Vector3 pointStartingRot = Vector3.zero;
+    [Header("Camera")]
+    public Vector3 camStartingPos = Vector3.zero;
+    public Vector3 camStartingRot = Vector3.zero;
+
     [SerializeField]
     public GameObject camPoint;
     public GameObject cam;
@@ -15,11 +23,7 @@ abstract public class CameraController : MonoBehaviour
         modeController = GetComponent<CameraModeController>();
         characterController = GetComponent<CharacterController>();
 
-        //Wait for campoint available.
-        while (camPoint == null)
-        {
-
-        }
+        camPoint = modeController.camPoint;
 
         //Assign the camera.
         cam = camPoint.gameObject.transform.GetChild(0).gameObject;
@@ -27,14 +31,15 @@ abstract public class CameraController : MonoBehaviour
         //Activate the camera.
         cam.SetActive(true);
 
-        ResetCamera();
+        ResetPositionAndRotation();
     }
 
-    public void ResetCamera()
+    public void ResetPositionAndRotation()
     {
-        cam.transform.localEulerAngles = Vector3.zero;
-        camPoint.transform.localEulerAngles = Vector3.zero;
-        camPoint.transform.localPosition = Vector3.zero;
+        cam.transform.localPosition = camStartingPos;
+        cam.transform.localEulerAngles = camStartingRot;
+        camPoint.transform.localPosition = pointStartingPos;
+        camPoint.transform.localEulerAngles = pointStartingRot;
     }
 
 }

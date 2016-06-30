@@ -6,7 +6,6 @@ public class StaticCameraController : CameraController
 {
     Vector3 cameraPosition;
 
-
     // Use this for initialization
     void Start()
     {

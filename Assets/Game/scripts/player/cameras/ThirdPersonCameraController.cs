@@ -4,6 +4,11 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonCameraController : CameraController
 {
+    //override position and rotation in construct.
+    public ThirdPersonCameraController()
+    {
+        base.camStartingPos = new Vector3(0, 0, -5f);
+    }
 
     // Update is called once per frame
     void Update()

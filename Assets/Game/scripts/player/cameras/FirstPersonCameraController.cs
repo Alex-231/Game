@@ -4,7 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class FirstPersonCameraController : CameraController
 {
-
     // Update is called once per frame
     void Update () {
         RotatePlayer();

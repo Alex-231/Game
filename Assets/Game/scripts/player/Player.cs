@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(CameraController))]
+[RequireComponent(typeof(CameraModeController))]
 [RequireComponent(typeof(MovementController))]
 [RequireComponent(typeof(PlayerOptions))]
 public class Player : MonoBehaviour {
