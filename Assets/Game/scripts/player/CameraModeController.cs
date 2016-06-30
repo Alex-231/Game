@@ -30,6 +30,7 @@ public class CameraModeController : MonoBehaviour
     [System.Serializable]
     public class ThirdPersonCameraSettings
     {
+        public LayerMask transparent;
         public float lookSensetivity = 3f;
         public float minDistance = 5f;
         public float maxDistance = 15f;

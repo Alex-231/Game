@@ -151,15 +151,22 @@ public class MovementController : MonoBehaviour
 
         //If the character is moving, center the camera and update rotation
         camController = GetComponent<ThirdPersonCameraController>();
-        if ((inputX != 0 || inputY != 0) && camController != null)
+
+        if (camController != null)
         {
-            camController.walking = true;
-            //gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
-            camController.CenterRotation();
-        }
-        else if (camController != null)
-        {
-            camController.walking = false;
+            if (inputX != 0 || inputY != 0)
+            {
+                if (!camController.walking)
+                {
+                    gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
+                }
+                camController.walking = true;
+                camController.CenterRotation();
+            }
+            else
+            {
+                camController.walking = false;
+            }
         }
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
