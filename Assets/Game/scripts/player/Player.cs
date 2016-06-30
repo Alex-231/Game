@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(CameraSwitch))]
+[RequireComponent(typeof(MovementController))]
 public class Player : MonoBehaviour {
 
 	// Use this for initialization

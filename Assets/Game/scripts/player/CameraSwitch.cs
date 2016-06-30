@@ -1,29 +1,10 @@
 ﻿using UnityEngine;
+using System.Collections;
 
-[RequireComponent(typeof(PlayerMotor))]
-public class PlayerController : MonoBehaviour {
-
-    public movementAndRotationSettings movSettings;
-    public jumpingAndFallingSettings jumpSettings;
+[System.Serializable]
+public class CameraSwitch : MonoBehaviour
+{
     public cameraPointsForCameraControllers camPoints;
-
-    [System.Serializable]
-    public class movementAndRotationSettings
-    {
-        public float speed = 5f;
-        public float lookSensitivity = 3f;
-    }
-
-    [System.Serializable]
-    public class jumpingAndFallingSettings
-    {
-        public LayerMask ground;
-        public float jumpVelocity = 20f;
-        public float distToGrounded = 1.1f;
-        public float downAcceleration = 0.75f;
-
-        public float jumpCount = 3;
-    }
 
     [System.Serializable]
     public class cameraPointsForCameraControllers
@@ -32,13 +13,9 @@ public class PlayerController : MonoBehaviour {
         public GameObject thirdPersonCamPoint;
     }
 
-    private PlayerMotor motor;
-    Vector3 velocity = Vector3.zero;
-
     // Use this for initialization
-    void Start () {
-        motor = GetComponent<PlayerMotor>();
-
+    void Start()
+    {
         //This is important to make sure the scripts and cameras are setup.
         SwitchToThirdPerson();
     }
@@ -82,60 +59,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
 
         if (Input.GetKeyDown(KeyCode.F))
         {
             SwitchCameraMode();
         }
 
-    }
-
-    void FixedUpdate()
-    {
-        UpdateMovement();
-
-        Jump();
-
-        //Apply movement
-        motor.Move(velocity);
-
-    }
-
-
-    bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, jumpSettings.distToGrounded, jumpSettings.ground);
-    }
-
-    void UpdateMovement()
-    {
-        //Calculate movement velocity as a 3D vector
-        float _xMov = Input.GetAxisRaw("Horizontal");
-        float _zMov = Input.GetAxisRaw("Vertical");
-
-        velocity.x = _xMov * movSettings.speed;
-        velocity.z = _zMov * movSettings.speed;
-    }
-
-    void Jump()
-    {
-        float _yMov = Input.GetAxisRaw("Jump");
-
-        if (_yMov > 0 && IsGrounded())
-        {
-            //Jumping
-            velocity.y = jumpSettings.jumpVelocity;
-        }
-        else if (_yMov == 0 && IsGrounded())
-        {
-            //Landed
-            velocity.y = 0;
-        }
-        else
-        {
-            //Falling
-            velocity.y -= jumpSettings.downAcceleration;
-        }
     }
 }
