@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ThirdPersonCameraController : MonoBehaviour {
+[RequireComponent(typeof(CharacterController))]
+public class ThirdPersonCameraController : MonoBehaviour
+{
 
     [SerializeField]
     public GameObject camPoint;
     private GameObject cam;
 
-    public void UpdateCamPoint (GameObject _camPoint)
-    {
-        camPoint = _camPoint;
-    }
+    CameraSwitch switcher;
+    CharacterController characterController;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
+
+        switcher = GetComponent<CameraSwitch>();
+        characterController = GetComponent<CharacterController>();
 
         //Wait for campoint available.
-	    while(camPoint == null)
+        while (camPoint == null)
         {
 
         }
@@ -28,9 +32,17 @@ public class ThirdPersonCameraController : MonoBehaviour {
         cam.SetActive(true);
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Calculate rotation as a 3D vector (turning around)
+        float _yRot = Input.GetAxisRaw("Mouse X");
+        float _xRot = Input.GetAxisRaw("Mouse Y");
+
+        Vector3 _camPointRotation = new Vector3(_xRot, _yRot, 0f) * switcher.lookSensitivity;
+
+        //Apply rotation
+        camPoint.transform.Rotate(_camPointRotation);
+    }
 }
