@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerOptions : MonoBehaviour {
+
+    [SerializeField]
+    public JumpTypes selectedJump = new StandardJump();
 
     abstract public class JumpTypes
     {
@@ -52,6 +56,17 @@ public class PlayerOptions : MonoBehaviour {
         public override void Jump()
         {
             //initial jump, next 2 jumps warp the player to facing direction.
+        }
+    }
+
+    public class OneJump : JumpTypes
+    {
+        public string jumpName = "One Jump";
+        public float jumpDuration = 0;
+        public int jumpCount = 1;
+        public override void Jump()
+        {
+            //initial jump only.
         }
     }
 }

@@ -23,7 +23,7 @@ public class MovementController : MonoBehaviour
     [System.Serializable]
     public class jumpingAndFallingSettings
     {
-        public float jumpVelocity = 8f;
+        public float jumpVelocity = 15f;
         public float gravity = 20f;
         public int jumpCount = 3;
         public float jumpCooldownSeconds = 1f;

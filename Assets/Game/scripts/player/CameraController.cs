@@ -1,15 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraSwitch : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-    public cameraPointsForCameraControllers camPoints;
-
-    [SerializeField]
-    public float lookSensitivity = 3f;
+    public CameraPointsForCameraControllers camPoints;
+    public FirstPersonCameraSettings firstPersonCamSettings;
+    public ThirdPersonCameraSettings thirdPersonCamSettings;
 
     [System.Serializable]
-    public class cameraPointsForCameraControllers
+    public class FirstPersonCameraSettings
+    {
+        public float lookSensitivity = 3f;
+        public bool inverted = false;
+        public float xAxisBuffer = 10f;
+    }
+
+    [System.Serializable]
+    public class ThirdPersonCameraSettings
+    {
+        public float lookSensetivity = 3f;
+        public float minDistance = 5f;
+        public float maxDistance = 15f;
+        //prevents the camera from rotating overhead or below feet.
+        public float xAxisBuffer = 10f;
+        public float distanceMoveSpeed = 3f;
+        public bool inverted = false;
+    }
+
+    [System.Serializable]
+    public class CameraPointsForCameraControllers
     {
         public GameObject firstPersonCamPoint;
         public GameObject thirdPersonCamPoint;
