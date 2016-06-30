@@ -151,7 +151,7 @@ public class MovementController : MonoBehaviour
 
         //If the character is moving, center the camera and update rotation
         camController = GetComponent<ThirdPersonCameraController>();
-        if (inputX != 0 || inputY != 0 && camController != null)
+        if ((inputX != 0 || inputY != 0) && camController != null)
         {
             camController.walking = true;
             //gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
