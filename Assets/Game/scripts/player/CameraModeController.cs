@@ -1,11 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraController : MonoBehaviour
+public class CameraModeController : MonoBehaviour
 {
     public CameraPointsForCameraControllers camPoints;
     public FirstPersonCameraSettings firstPersonCamSettings;
     public ThirdPersonCameraSettings thirdPersonCamSettings;
+
+    public enum CameraModes
+    {
+        FirstPerson,
+        ThirdPerson,
+        TopDown,
+        FlyCam,
+        Static //Remains in place.
+    }
+
+    public CameraModes cameraMode = CameraModes.ThirdPerson;
+    private CameraModes activeCamera;
 
     [System.Serializable]
     public class FirstPersonCameraSettings
@@ -34,32 +46,51 @@ public class CameraController : MonoBehaviour
         public GameObject thirdPersonCamPoint;
     }
 
+    Vector3 cameraStartingPoint;
+
     // Use this for initialization
     void Start()
     {
+        activeCamera = cameraMode;
+
         //This is important to make sure the scripts and cameras are setup.
-        SwitchToThirdPerson();
+        SwitchCameraMode();
     }
 
     void SwitchCameraMode()
     {
-        if (GetComponent<ThirdPersonCameraController>() != null)
+        DeactivateAllCameras();
+
+        //Most used at the top.
+        if (cameraMode == CameraModes.ThirdPerson)
         {
-            SwitchToFirstPerson();
-        }
-        else
-        {
+            activeCamera = CameraModes.ThirdPerson;
             SwitchToThirdPerson();
         }
+        else if (cameraMode == CameraModes.FirstPerson)
+        {
+            activeCamera = CameraModes.FirstPerson;
+            SwitchToFirstPerson();
+        }
+        else if (cameraMode == CameraModes.Static)
+        {
+            activeCamera = CameraModes.Static;
+            SwitchToStatic();
+        }
+    }
+
+    void DeactivateAllCameras()
+    {
+        //Remove script of type CameraControllerType
+        Destroy(GetComponent<CameraController>());
+
+        //Deactivate cam points.
+        camPoints.firstPersonCamPoint.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        camPoints.thirdPersonCamPoint.gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     void SwitchToThirdPerson()
     {
-        //Remove the First Person Controller if it's there.
-        Destroy(GetComponent<FirstPersonCameraController>());
-        //Deactivate the first person camera.
-        camPoints.firstPersonCamPoint.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-
         //Add the Third Person Controller, setup variables.
         this.gameObject.AddComponent<ThirdPersonCameraController>();
         ThirdPersonCameraController _thirdPersonCameraController = GetComponent<ThirdPersonCameraController>();
@@ -68,22 +99,25 @@ public class CameraController : MonoBehaviour
 
     void SwitchToFirstPerson()
     {
-        //Remove the Third Person Controller if it's there.
-        Destroy(GetComponent<ThirdPersonCameraController>());
-        //Deactivate the third person camera.
-        camPoints.thirdPersonCamPoint.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-
         //Add the First Person Controller, setup variables.
         this.gameObject.AddComponent<FirstPersonCameraController>();
         FirstPersonCameraController _firstPersonCameraController = GetComponent<FirstPersonCameraController>();
         _firstPersonCameraController.camPoint = camPoints.firstPersonCamPoint;
     }
 
+    void SwitchToStatic()
+    {
+        //Add the First Person Controller, setup variables.
+        this.gameObject.AddComponent<StaticCameraController>();
+        StaticCameraController _firstPersonCameraController = GetComponent<StaticCameraController>();
+        _firstPersonCameraController.camPoint = camPoints.firstPersonCamPoint;
+    }
+
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (activeCamera != cameraMode)
         {
             SwitchCameraMode();
         }
