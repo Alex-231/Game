@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
 public class CameraSwitch : MonoBehaviour
 {
     public cameraPointsForCameraControllers camPoints;
+
+    [SerializeField]
+    public float lookSensitivity = 3f;
 
     [System.Serializable]
     public class cameraPointsForCameraControllers

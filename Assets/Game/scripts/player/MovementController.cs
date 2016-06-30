@@ -15,7 +15,6 @@ public class MovementController : MonoBehaviour
         public float runSpeed = 10f;
         // Slows down diagonal movement a little to make it as fast as straight movement.
         public bool limitDiagonalSpeed = true;
-        public float lookSensitivity = 3f;
         public bool slideOnSlopes = true;
         public float slideSpeed = 12;
         public float antiBumpFactor = .75f;
