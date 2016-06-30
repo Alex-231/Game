@@ -153,10 +153,13 @@ public class MovementController : MonoBehaviour
         camController = GetComponent<ThirdPersonCameraController>();
         if (inputX != 0 || inputY != 0 && camController != null)
         {
-            Debug.Log("test");
-
-            gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
+            camController.walking = true;
+            //gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
             camController.CenterRotation();
+        }
+        else
+        {
+            camController.walking = false;
         }
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
