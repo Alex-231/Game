@@ -2,62 +2,53 @@
 using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
-public class FlyCameraController : CameraController {
+public class FlyCameraController : CameraController
+{
+    MovementController movController;
+    void Start()
+    {
+        base.Start();
+
+        movController = GetComponent<MovementController>();
+        movController.enabled = false;
+    }
 
     // Update is called once per frame
-    void Update () {
-        RotatePlayer();
+    void Update()
+    {
         RotateCamera();
+        MoveCamera();
         CorrectCameraRotation();
     }
 
-    void RotatePlayer()
-    {
-        float _yRot = Input.GetAxisRaw("Mouse X");
-
-        Vector3 _rotation = new Vector3(0f, _yRot, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
-
-        //Apply rotation
-        characterController.transform.Rotate(_rotation);
-    }
-    
     void RotateCamera()
     {
-        //Looking up and down, needs to be inverted for some reason...
+        //Calculate rotation as a 3D vector (turning around)
+        float _yRot = Input.GetAxisRaw("Mouse X");
         float _xRot = -Input.GetAxisRaw("Mouse Y");
 
-        //If the camera is set to inverted mode, invert the rotation.
-        if(modeController.firstPersonCamSettings.inverted)
+        if (modeController.thirdPersonCamSettings.inverted)
         {
+            //probably better syntax for this.
             _xRot = -_xRot;
         }
 
-        Vector3 _rotation = new Vector3(_xRot, 0f, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
+        Vector3 _camPointRotation = new Vector3(_xRot, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
 
         //Apply rotation
-        cam.transform.Rotate(_rotation);
+        camPoint.transform.Rotate(_camPointRotation);
     }
 
-    void CorrectCameraRotation()
+    void MoveCamera()
     {
-        //Prevents rotation on the Z axis.
-        Quaternion _transformRot = cam.transform.rotation;
-        _transformRot.eulerAngles = new Vector3(_transformRot.eulerAngles.x, _transformRot.eulerAngles.y, 0);
+        float _movX = Input.GetAxis("Horizontal");
+        float _movZ = Input.GetAxis("Vertical");
 
-        cam.transform.rotation = _transformRot;
+        camPoint.transform.Translate(new Vector3(_movX, 0, _movZ));
+    }
 
-        //applies X axis buffer.
-        Vector3 _bufferedRot = cam.transform.localEulerAngles;
-        //if x > 90 && x < 270, if the player is looking down.
-        if (_bufferedRot.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x < 270)
-        {
-            _bufferedRot.x = 90 - modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-        //if x < 270 && x > 90, if the player is looking up.
-        else if (_bufferedRot.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x > 90)
-        {
-            _bufferedRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-        cam.transform.localEulerAngles = _bufferedRot;
+    void OnDestroy()
+    {
+        movController.enabled = true;
     }
 }

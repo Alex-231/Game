@@ -4,6 +4,11 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class FirstPersonCameraController : CameraController
 {
+    FirstPersonCameraController()
+    {
+        base.camStartingPos = new Vector3(0, 1f, 0);
+    }
+
     // Update is called once per frame
     void Update () {
         RotatePlayer();
@@ -36,28 +41,5 @@ public class FirstPersonCameraController : CameraController
 
         //Apply rotation
         cam.transform.Rotate(_rotation);
-    }
-
-    void CorrectCameraRotation()
-    {
-        //Prevents rotation on the Z axis.
-        Quaternion _transformRot = cam.transform.rotation;
-        _transformRot.eulerAngles = new Vector3(_transformRot.eulerAngles.x, _transformRot.eulerAngles.y, 0);
-
-        cam.transform.rotation = _transformRot;
-
-        //applies X axis buffer.
-        Vector3 _bufferedRot = cam.transform.localEulerAngles;
-        //if x > 90 && x < 270, if the player is looking down.
-        if (_bufferedRot.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x < 270)
-        {
-            _bufferedRot.x = 90 - modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-        //if x < 270 && x > 90, if the player is looking up.
-        else if (_bufferedRot.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x > 90)
-        {
-            _bufferedRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-        cam.transform.localEulerAngles = _bufferedRot;
     }
 }

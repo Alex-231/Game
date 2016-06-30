@@ -91,6 +91,5 @@ public class CameraModeController : MonoBehaviour
         {
             SwitchCameraMode();
         }
-
     }
 }
