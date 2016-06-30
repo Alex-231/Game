@@ -4,7 +4,7 @@ using System.Collections;
 public class TopDownCameraController : CameraController
 {
 
-    public TopDownCameraController()
+    TopDownCameraController()
     {
         base.camStartingPos = new Vector3(0, 0, -5f);
         base.pointStartingRot = new Vector3(90f, 0, 0);
