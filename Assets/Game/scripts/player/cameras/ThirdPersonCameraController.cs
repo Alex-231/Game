@@ -34,7 +34,6 @@ public class ThirdPersonCameraController : CameraController
 
         if (modeController.thirdPersonCamSettings.inverted)
         {
-            //probably better syntax for this.
             _xRot = -_xRot;
         }
 

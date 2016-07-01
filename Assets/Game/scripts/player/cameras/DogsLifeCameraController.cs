@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// A camera controller loosly based on the game Dog's Life for the PS2.
+/// </summary>
 public class DogsLifeCameraController : CameraController
 {
 
@@ -35,7 +38,6 @@ public class DogsLifeCameraController : CameraController
 
         if (modeController.thirdPersonCamSettings.inverted)
         {
-            //probably better syntax for this.
             _xRot = -_xRot;
         }
 

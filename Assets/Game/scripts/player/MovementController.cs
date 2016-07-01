@@ -161,7 +161,7 @@ public class MovementController : MonoBehaviour
                     gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
                 }
                 camController.walking = true;
-                camController.CenterRotation();
+                camController.CenterCamPointAxisY();
             }
             else
             {

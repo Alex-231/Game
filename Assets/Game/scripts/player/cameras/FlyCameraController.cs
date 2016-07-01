@@ -49,6 +49,7 @@ public class FlyCameraController : CameraController
         camPoint.transform.Translate(new Vector3(_movX, 0, _movZ));
     }
 
+    //The fly camera disables movement, so when it's destroyed movement needs to be re-enabled.
     void OnDestroy()
     {
         movController.enabled = true;

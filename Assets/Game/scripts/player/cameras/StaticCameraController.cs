@@ -21,10 +21,10 @@ public class StaticCameraController : CameraController
     void Update()
     {
         RotatePlayer();
-        UpdateCameraPosAndRot();
+        FreezeCameraPosAndRot();
     }
 
-    void UpdateCameraPosAndRot()
+    void FreezeCameraPosAndRot()
     {
         cam.transform.position = cameraPosition;
         cam.transform.rotation = cameraRotation;

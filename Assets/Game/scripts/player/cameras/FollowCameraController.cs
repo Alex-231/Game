@@ -25,7 +25,6 @@ public class FollowCameraController : CameraController
 
         if (modeController.thirdPersonCamSettings.inverted)
         {
-            //probably better syntax for this.
             _xRot = -_xRot;
         }
 

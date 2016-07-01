@@ -3,8 +3,13 @@
 [RequireComponent(typeof(CharacterController))]
 abstract public class CameraController : MonoBehaviour
 {
-    //If the walking boolean needs to be updated, set this to true.
+    /// <summary>
+    /// If the camera needs to react to the player walking, set this to true.
+    /// </summary>
     public bool overrideWalking = false;
+    /// <summary>
+    /// If the player is walking and overrideWalking is set to true, this will be true.
+    /// </summary>
     public bool walking = false;
 
     //These values represent local positions and rotations!
@@ -35,10 +40,13 @@ abstract public class CameraController : MonoBehaviour
         //Activate the camera.
         cam.SetActive(true);
 
-        ResetPositionAndRotation();
+        ResetCamAndCamPointPosAndRot();
     }
 
-    public void ResetPositionAndRotation()
+    /// <summary>
+    /// Sets the position and rotation of the camera and camPoint to the starting values.
+    /// </summary>
+    public void ResetCamAndCamPointPosAndRot()
     {
         cam.transform.localPosition = camStartingPos;
         cam.transform.localEulerAngles = camStartingRot;
@@ -46,18 +54,28 @@ abstract public class CameraController : MonoBehaviour
         camPoint.transform.localEulerAngles = pointStartingRot;
     }
 
+
+    /// <summary>
+    /// Sets the z rotation of camPoint to 0.
+    /// </summary>
     public void LockCamPointZRotation()
     {
         Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
         camPoint.transform.eulerAngles = new Vector3(_camPointCurrentRot.x, _camPointCurrentRot.y, 0);
     }
 
+    /// <summary>
+    /// Sets the z value of cam to 0.
+    /// </summary>
     public void LockCamZRotation()
     {
         Vector3 _camCurrentRot = cam.transform.eulerAngles;
         cam.transform.eulerAngles = new Vector3(_camCurrentRot.x, _camCurrentRot.y, 0);
     }
 
+    /// <summary>
+    /// Sets the y value of camPoint to 0.
+    /// </summary>
     public void LockCamPointYRotation()
     {
         Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
@@ -74,8 +92,10 @@ abstract public class CameraController : MonoBehaviour
         characterController.transform.Rotate(_rotation);
     }
 
-
-    public void CenterRotation()
+    /// <summary>
+    /// Centers the campoint on Axis Y.
+    /// </summary>
+    public void CenterCamPointAxisY()
     {
         camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
     }
@@ -85,6 +105,9 @@ abstract public class CameraController : MonoBehaviour
         cam.transform.localPosition = new Vector3(0, 0, newLocation);
     }
 
+    /// <summary>
+    /// Moves the camera forwards or backwards, within the min and max boundries, when the player scrolls.
+    /// </summary>
     public void UpdateCameraDistance()
     {
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
