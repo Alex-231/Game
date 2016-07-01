@@ -12,6 +12,9 @@ abstract public class CameraController : MonoBehaviour
     /// </summary>
     public bool walking = false;
 
+    //This variable is used for cameras using the UpdateCameraDistance method.
+    public float chosenCamDistance;
+
     //These values represent local positions and rotations!
     [Header("Camera Point")]
     public Vector3 pointStartingPos = Vector3.zero;
@@ -42,6 +45,8 @@ abstract public class CameraController : MonoBehaviour
         cam.SetActive(true);
 
         ResetCamAndCamPointPosAndRot();
+
+        chosenCamDistance = cam.transform.localPosition.z;
     }
 
     /// <summary>
@@ -119,16 +124,18 @@ abstract public class CameraController : MonoBehaviour
 
             if (_proposedNewLocation < -modeController.thirdPersonCamSettings.maxDistance)
             {
-                ChangeCameraOffset(-modeController.thirdPersonCamSettings.maxDistance);
+                chosenCamDistance = -modeController.thirdPersonCamSettings.maxDistance;
             }
             else if (_proposedNewLocation > -modeController.thirdPersonCamSettings.minDistance)
             {
-                ChangeCameraOffset(-modeController.thirdPersonCamSettings.minDistance);
+                chosenCamDistance = -modeController.thirdPersonCamSettings.minDistance;
             }
             else
             {
-                ChangeCameraOffset(_proposedNewLocation);
+                chosenCamDistance = _proposedNewLocation;
             }
+
+            ChangeCameraOffset(chosenCamDistance);
         }
     }
 
@@ -149,5 +156,26 @@ abstract public class CameraController : MonoBehaviour
             _rotate.x = (270 + modeController.xAxisBuffer) - _currentRotation.x;
         }
         return _rotate;
+    }
+
+    public void KeepCameraInsideWalls()
+    {
+        RaycastHit objectHitInfo = new RaycastHit();
+        float cameraDistance = Vector3.Distance(transform.position, cam.transform.position);
+
+        //Transform desiredCameraTransform = cam.transform;
+        //desiredCameraTransform.localPosition = new Vector3(desiredCameraTransform.localPosition.x, desiredCameraTransform.localPosition.y, chosenCamDistance);
+
+        bool hitWall = Physics.Linecast(transform.position, cam.transform.position, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
+        Debug.DrawLine(transform.position, cam.transform.position, Color.white);
+        if (hitWall)
+        {
+            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance));
+            Debug.Log("The camera linecast hit a wall.");
+        }
+        else if (cam.transform.localPosition.z != chosenCamDistance)
+        {
+
+        }
     }
 }
