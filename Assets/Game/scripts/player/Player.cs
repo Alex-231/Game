@@ -5,10 +5,15 @@
 [RequireComponent(typeof(PlayerOptions))]
 public class Player : MonoBehaviour {
 
+    public bool lockCamera = true;
+
 	// Use this for initialization
 	void Start () {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (lockCamera)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 	
 	// Update is called once per frame
