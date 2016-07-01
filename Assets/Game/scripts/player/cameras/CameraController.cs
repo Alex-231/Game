@@ -163,19 +163,17 @@ abstract public class CameraController : MonoBehaviour
         RaycastHit objectHitInfo = new RaycastHit();
         float cameraDistance = Vector3.Distance(transform.position, cam.transform.position);
 
-        //Transform desiredCameraTransform = cam.transform;
-        //desiredCameraTransform.localPosition = new Vector3(desiredCameraTransform.localPosition.x, desiredCameraTransform.localPosition.y, chosenCamDistance);
-
-        bool hitWall = Physics.Linecast(transform.position, cam.transform.position, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
-        Debug.DrawLine(transform.position, cam.transform.position, Color.white);
+        bool hitWall = Physics.Raycast(transform.position, (cam.transform.position - transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
+        //Debug.DrawLine(transform.position, cam.transform.position, Color.red);
+        //Debug.DrawRay(transform.position, (cam.transform.position - transform.position).normalized, Color.white);
         if (hitWall)
         {
             ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance));
-            Debug.Log("The camera linecast hit a wall.");
+            //Debug.Log("The camera linecast hit a wall.");
         }
         else if (cam.transform.localPosition.z != chosenCamDistance)
         {
-
+            cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, chosenCamDistance);
         }
     }
 }
