@@ -12,8 +12,9 @@ public class FirstPersonCameraController : CameraController
     void Update () {
         RotatePlayer();
         RotateCamera();
-        LockZRotation();
-        ApplyRotationBufferX(camPoint.transform, false);
+        LockCamPointZRotation();
+        ApplyRotationBufferX(camPoint.transform, true);
+        LockCamPointYRotation();
     }
     
     void RotateCamera()

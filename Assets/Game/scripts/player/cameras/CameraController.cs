@@ -46,14 +46,28 @@ abstract public class CameraController : MonoBehaviour
         camPoint.transform.localEulerAngles = pointStartingRot;
     }
 
-    public void LockZRotation()
+    public void LockCamPointZRotation()
     {
-        Vector3 _camCurrentRot = cam.transform.eulerAngles;
-        cam.transform.eulerAngles = new Vector3(_camCurrentRot.x, _camCurrentRot.y, 0);
         Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
         camPoint.transform.eulerAngles = new Vector3(_camPointCurrentRot.x, _camPointCurrentRot.y, 0);
     }
 
+    public void LockCamZRotation()
+    {
+        Vector3 _camCurrentRot = cam.transform.eulerAngles;
+        cam.transform.eulerAngles = new Vector3(_camCurrentRot.x, _camCurrentRot.y, 0);
+    }
+
+    public void LockCamPointYRotation()
+    {
+        Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
+        camPoint.transform.localEulerAngles = new Vector3(_camPointCurrentRot.x, 0, _camPointCurrentRot.z);
+    }
+    /// <summary>
+    /// Applies the configured camera buffered value to the current rotation.
+    /// </summary>
+    /// <param name="_transform">The transform to apply the buffer to.</param>
+    /// <param name="local">Apply to localEulerAngles?</param>
     public void ApplyRotationBufferX(Transform _transform, bool local)
     {
         Vector3 _transformRot;
@@ -66,27 +80,24 @@ abstract public class CameraController : MonoBehaviour
         {
             _transformRot = _transform.rotation.eulerAngles;
         }
-
-        //applies X axis buffer.
-        Vector3 _bufferedRot = camPoint.transform.eulerAngles;
         //if x > 90 && x < 270, if the player is looking down.
-        if (_bufferedRot.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x < 270)
+        if (_transformRot.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _transformRot.x < 270)
         {
-            _bufferedRot.x = 90 - modeController.thirdPersonCamSettings.xAxisBuffer;
+            _transformRot.x = 90 - modeController.thirdPersonCamSettings.xAxisBuffer;
         }
         //if x < 270 && x > 90, if the player is looking up.
-        else if (_bufferedRot.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _bufferedRot.x > 90)
+        else if (_transformRot.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _transformRot.x > 90)
         {
-            _bufferedRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
+            _transformRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
         }
 
         if (local)
         {
-            _transform.localEulerAngles = _bufferedRot;
+            _transform.localEulerAngles = _transformRot;
         }
         else
         {
-            _transform.eulerAngles = _bufferedRot;
+            _transform.eulerAngles = _transformRot;
         }
     }
 

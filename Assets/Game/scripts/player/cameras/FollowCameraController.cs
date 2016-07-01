@@ -16,7 +16,6 @@ public class FollowCameraController : CameraController
     {
         RotateCamera();
         RotatePlayer();
-        LockZRotation();
         ApplyRotationBufferX(camPoint.transform, false);
         UpdateCameraDistance();
     }

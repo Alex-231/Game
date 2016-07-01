@@ -17,8 +17,8 @@ public class DogsLifeCameraController : CameraController
     void Update()
     {
         RotateCamera();
-        LockZRotation();
-        //ApplyRotationBufferX(camPoint.transform, false);
+        LockCamZRotation();
+        ApplyRotationBufferX(cam.transform, true);
         UpdateCameraDistance();
     }
 
