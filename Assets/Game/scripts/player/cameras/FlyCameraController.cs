@@ -17,7 +17,8 @@ public class FlyCameraController : CameraController
     {
         RotateCamera();
         MoveCamera();
-        CorrectCameraRotation(cam.transform.rotation, false);
+        LockZRotation();
+        ApplyRotationBufferX(cam.transform, false);
     }
 
     void RotateCamera()

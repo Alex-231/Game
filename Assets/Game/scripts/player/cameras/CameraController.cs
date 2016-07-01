@@ -46,12 +46,26 @@ abstract public class CameraController : MonoBehaviour
         camPoint.transform.localEulerAngles = pointStartingRot;
     }
 
-    public void CorrectCameraRotation(Quaternion _transformRot, bool local)
+    public void LockZRotation()
     {
-        //Prevents rotation on the Z axis.
-        _transformRot.eulerAngles = new Vector3(_transformRot.eulerAngles.x, _transformRot.eulerAngles.y, 0);
+        Vector3 _camCurrentRot = cam.transform.eulerAngles;
+        cam.transform.eulerAngles = new Vector3(_camCurrentRot.x, _camCurrentRot.y, 0);
+        Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
+        camPoint.transform.eulerAngles = new Vector3(_camPointCurrentRot.x, _camPointCurrentRot.y, 0);
+    }
 
-        camPoint.transform.rotation = _transformRot;
+    public void ApplyRotationBufferX(Transform _transform, bool local)
+    {
+        Vector3 _transformRot;
+
+        if(local)
+        {
+            _transformRot = _transform.localEulerAngles;
+        }
+        else
+        {
+            _transformRot = _transform.rotation.eulerAngles;
+        }
 
         //applies X axis buffer.
         Vector3 _bufferedRot = camPoint.transform.eulerAngles;
@@ -66,13 +80,13 @@ abstract public class CameraController : MonoBehaviour
             _bufferedRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
         }
 
-        if(local)
+        if (local)
         {
-            camPoint.transform.localEulerAngles = _bufferedRot;
+            _transform.localEulerAngles = _bufferedRot;
         }
         else
         {
-            camPoint.transform.eulerAngles = _bufferedRot;
+            _transform.eulerAngles = _bufferedRot;
         }
     }
 
@@ -90,5 +104,33 @@ abstract public class CameraController : MonoBehaviour
     public void CenterRotation()
     {
         camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
+    }
+
+    void ChangeCameraOffset(float newLocation)
+    {
+        cam.transform.localPosition = new Vector3(0, 0, newLocation);
+    }
+
+    public void UpdateCameraDistance()
+    {
+        if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
+        {
+            float _proposedNewLocation = cam.transform.localPosition.z + Input.GetAxisRaw("Mouse ScrollWheel") * modeController.thirdPersonCamSettings.distanceMoveSpeed;
+
+            //Camera distances are negative because the camera is behind the player dingus.
+
+            if (_proposedNewLocation < -modeController.thirdPersonCamSettings.maxDistance)
+            {
+                ChangeCameraOffset(-modeController.thirdPersonCamSettings.maxDistance);
+            }
+            else if (_proposedNewLocation > -modeController.thirdPersonCamSettings.minDistance)
+            {
+                ChangeCameraOffset(-modeController.thirdPersonCamSettings.minDistance);
+            }
+            else
+            {
+                ChangeCameraOffset(_proposedNewLocation);
+            }
+        }
     }
 }

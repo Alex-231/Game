@@ -13,7 +13,8 @@ public class CameraModeController : MonoBehaviour
         TopDown,
         FlyCam,
         Static,
-        Follow
+        Follow,
+        DogsLife
     }
 
     public CameraModes cameraMode = CameraModes.ThirdPerson;
@@ -90,6 +91,9 @@ public class CameraModeController : MonoBehaviour
                 break;
             case CameraModes.Follow:
                 gameObject.AddComponent<FollowCameraController>();
+                break;
+            case CameraModes.DogsLife:
+                gameObject.AddComponent<DogsLifeCameraController>();
                 break;
         }
     }
