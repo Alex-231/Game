@@ -17,7 +17,6 @@ public class ThirdPersonCameraController : CameraController
     {
         RotateCamera();
         LockCamPointZRotation();
-        ApplyRotationBufferX(camPoint.transform, false);
         UpdateCameraDistance();
     }
 
@@ -39,19 +38,12 @@ public class ThirdPersonCameraController : CameraController
             _xRot = -_xRot;
         }
 
-        Vector3 _camPointRotation = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+        Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
-        if(camPoint.transform.eulerAngles.x + _camPointRotation.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && camPoint.transform.eulerAngles.x < 270)
-        {
-            _camPointRotation.x = (90 - modeController.thirdPersonCamSettings.xAxisBuffer) - camPoint.transform.eulerAngles.x;
-        }
-        else if (camPoint.transform.eulerAngles.x + _camPointRotation.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && camPoint.transform.eulerAngles.x > 90)
-        {
-            _camPointRotation.x = (270 + modeController.thirdPersonCamSettings.xAxisBuffer) - camPoint.transform.eulerAngles.x;
-        }
+        _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
-        camPoint.transform.Rotate(_camPointRotation);
+        camPoint.transform.Rotate(_camPointRotate);
 
     }
 

@@ -18,22 +18,24 @@ public class FlyCameraController : CameraController
         RotateCamera();
         MoveCamera();
         LockCamZRotation();
-        ApplyRotationBufferX(cam.transform, false);
+        LockCamPointZRotation();
     }
 
     void RotateCamera()
     {
-        //Calculate rotation as a 3D vector (turning around)
+        //Looking up and down, needs to be inverted for some reason...
         float _yRot = Input.GetAxisRaw("Mouse X");
         float _xRot = -Input.GetAxisRaw("Mouse Y");
 
-        if (modeController.thirdPersonCamSettings.inverted)
+        //If the camera is set to inverted mode, invert the rotation.
+        if (modeController.firstPersonCamSettings.inverted)
         {
-            //probably better syntax for this.
             _xRot = -_xRot;
         }
 
-        Vector3 _camPointRotation = new Vector3(_xRot, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
+        Vector3 _camPointRotation = new Vector3(_xRot, _yRot, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
+
+        _camPointRotation = ApplyXBufferToRotation(cam.transform.eulerAngles, _camPointRotation);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotation);

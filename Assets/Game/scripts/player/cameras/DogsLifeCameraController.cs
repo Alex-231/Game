@@ -18,7 +18,6 @@ public class DogsLifeCameraController : CameraController
     {
         RotateCamera();
         LockCamZRotation();
-        ApplyRotationBufferX(cam.transform, true);
         UpdateCameraDistance();
     }
 
@@ -43,6 +42,7 @@ public class DogsLifeCameraController : CameraController
         Vector3 _camPointRotation = new Vector3(0, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
         Vector3 _camRotation = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
+        _camRotation = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camRotation);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotation);

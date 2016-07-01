@@ -13,7 +13,6 @@ public class FirstPersonCameraController : CameraController
         RotatePlayer();
         RotateCamera();
         LockCamPointZRotation();
-        ApplyRotationBufferX(camPoint.transform, true);
         LockCamPointYRotation();
     }
     
@@ -29,6 +28,8 @@ public class FirstPersonCameraController : CameraController
         }
 
         Vector3 _rotation = new Vector3(_xRot, 0f, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
+
+        _rotation = ApplyXBufferToRotation(cam.transform.eulerAngles, _rotation);
 
         //Apply rotation
         camPoint.transform.Rotate(_rotation);

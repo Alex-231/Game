@@ -16,7 +16,6 @@ public class FollowCameraController : CameraController
     {
         RotateCamera();
         RotatePlayer();
-        ApplyRotationBufferX(camPoint.transform, false);
         UpdateCameraDistance();
     }
 
@@ -31,6 +30,8 @@ public class FollowCameraController : CameraController
         }
 
         Vector3 _camPointRotation = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+
+        _camPointRotation = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camPointRotation);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotation);

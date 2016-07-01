@@ -63,43 +63,6 @@ abstract public class CameraController : MonoBehaviour
         Vector3 _camPointCurrentRot = camPoint.transform.eulerAngles;
         camPoint.transform.localEulerAngles = new Vector3(_camPointCurrentRot.x, 0, _camPointCurrentRot.z);
     }
-    /// <summary>
-    /// Applies the configured camera buffered value to the current rotation.
-    /// </summary>
-    /// <param name="_transform">The transform to apply the buffer to.</param>
-    /// <param name="local">Apply to localEulerAngles?</param>
-    public void ApplyRotationBufferX(Transform _transform, bool local)
-    {
-        Vector3 _transformRot;
-
-        if(local)
-        {
-            _transformRot = _transform.localEulerAngles;
-        }
-        else
-        {
-            _transformRot = _transform.rotation.eulerAngles;
-        }
-        //if x > 90 && x < 270, if the player is looking down.
-        if (_transformRot.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _transformRot.x < 270)
-        {
-            _transformRot.x = 90 - modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-        //if x < 270 && x > 90, if the player is looking up.
-        else if (_transformRot.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _transformRot.x > 90)
-        {
-            _transformRot.x = 270 + modeController.thirdPersonCamSettings.xAxisBuffer;
-        }
-
-        if (local)
-        {
-            _transform.localEulerAngles = _transformRot;
-        }
-        else
-        {
-            _transform.eulerAngles = _transformRot;
-        }
-    }
 
     public void RotatePlayer()
     {
@@ -143,5 +106,24 @@ abstract public class CameraController : MonoBehaviour
                 ChangeCameraOffset(_proposedNewLocation);
             }
         }
+    }
+
+    /// <summary>
+    /// Prevents the a camera rotation from flipping to the back of the player.
+    /// </summary>
+    /// <param name="_Rotation">The current rotation of the camera or point.</param>
+    /// <param name="_Rotate">The proposed rotate of the camera or point.</param>
+    /// <returns>Returns the corrected rotation.</returns>
+    public Vector3 ApplyXBufferToRotation(Vector3 _currentRotation, Vector3 _rotate)
+    {
+        if (_currentRotation.x + _rotate.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _currentRotation.x < 270)
+        {
+            _rotate.x = (90 - modeController.thirdPersonCamSettings.xAxisBuffer) - _currentRotation.x;
+        }
+        else if (_currentRotation.x + _rotate.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _currentRotation.x > 90)
+        {
+            _rotate.x = (270 + modeController.thirdPersonCamSettings.xAxisBuffer) - _currentRotation.x;
+        }
+        return _rotate;
     }
 }
