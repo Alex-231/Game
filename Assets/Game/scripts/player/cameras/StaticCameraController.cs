@@ -4,6 +4,7 @@ using System.Collections;
 public class StaticCameraController : CameraController
 {
     Vector3 cameraPosition;
+    Quaternion cameraRotation;
 
     // Use this for initialization
     void Start()
@@ -13,13 +14,14 @@ public class StaticCameraController : CameraController
 
         //Declares the initial position.
         cameraPosition = cam.transform.position;
+        cameraRotation = cam.transform.rotation;
     }
 
     // Update is called once per frame
     void Update()
     {
         RotatePlayer();
-        UpdateCameraPosition();
+        UpdateCameraPosAndRot();
     }
 
     void RotatePlayer()
@@ -32,8 +34,9 @@ public class StaticCameraController : CameraController
         characterController.transform.Rotate(_rotation);
     }
 
-    void UpdateCameraPosition()
+    void UpdateCameraPosAndRot()
     {
         cam.transform.position = cameraPosition;
+        cam.transform.rotation = cameraRotation;
     }
 }
