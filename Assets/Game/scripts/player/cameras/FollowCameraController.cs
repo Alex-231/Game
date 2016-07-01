@@ -20,16 +20,6 @@ public class FollowCameraController : CameraController
         UpdateCameraDistance();
     }
 
-    void RotatePlayer()
-    {
-        float _yRot = Input.GetAxisRaw("Mouse X");
-
-        Vector3 _rotation = new Vector3(0f, _yRot, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
-
-        //Apply rotation
-        characterController.transform.Rotate(_rotation);
-    }
-
     void UpdateCameraDistance()
     {
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)

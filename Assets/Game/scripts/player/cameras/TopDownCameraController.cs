@@ -13,6 +13,8 @@ public class TopDownCameraController : CameraController
     // Update is called once per frame
     void Update()
     {
+        RotatePlayer();
+        UpdateCameraRotation();
         UpdateCameraDistance();
     }
 
@@ -42,5 +44,10 @@ public class TopDownCameraController : CameraController
     void ChangeCameraOffset(float newLocation)
     {
         cam.transform.localPosition = new Vector3(0, 0, newLocation);
+    }
+
+    void UpdateCameraRotation()
+    {
+        camPoint.transform.eulerAngles = base.pointStartingRot;
     }
 }
