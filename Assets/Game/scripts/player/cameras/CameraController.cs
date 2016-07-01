@@ -11,6 +11,10 @@ abstract public class CameraController : MonoBehaviour
     /// If the player is walking and overrideWalking is set to true, this will be true.
     /// </summary>
     public bool walking = false;
+    /// <summary>
+    /// If the camera controller should lock the cursor.
+    /// </summary>
+    public bool lockCursor = true;
 
     //These values represent local positions and rotations!
     [Header("Camera Point")]
@@ -29,6 +33,12 @@ abstract public class CameraController : MonoBehaviour
 
     public void Start()
     {
+        if(lockCursor)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         modeController = GetComponent<CameraModeController>();
         characterController = GetComponent<CharacterController>();
 
@@ -139,13 +149,13 @@ abstract public class CameraController : MonoBehaviour
     /// <returns>Returns the corrected rotation.</returns>
     public Vector3 ApplyXBufferToRotation(Vector3 _currentRotation, Vector3 _rotate)
     {
-        if (_currentRotation.x + _rotate.x > 90 - modeController.thirdPersonCamSettings.xAxisBuffer && _currentRotation.x < 270)
+        if (_currentRotation.x + _rotate.x > 90 - modeController.xAxisBuffer && _currentRotation.x < 270)
         {
-            _rotate.x = (90 - modeController.thirdPersonCamSettings.xAxisBuffer) - _currentRotation.x;
+            _rotate.x = (90 - modeController.xAxisBuffer) - _currentRotation.x;
         }
-        else if (_currentRotation.x + _rotate.x < 270 + modeController.thirdPersonCamSettings.xAxisBuffer && _currentRotation.x > 90)
+        else if (_currentRotation.x + _rotate.x < 270 + modeController.xAxisBuffer && _currentRotation.x > 90)
         {
-            _rotate.x = (270 + modeController.thirdPersonCamSettings.xAxisBuffer) - _currentRotation.x;
+            _rotate.x = (270 + modeController.xAxisBuffer) - _currentRotation.x;
         }
         return _rotate;
     }

@@ -3,6 +3,11 @@ using System.Collections;
 
 public class CameraModeController : MonoBehaviour
 {
+    public GameObject camPoint;
+
+    //how close the camera can be to directly overhead or underfoot.
+    public float xAxisBuffer = 10f;
+
     public FirstPersonCameraSettings firstPersonCamSettings;
     public ThirdPersonCameraSettings thirdPersonCamSettings;
 
@@ -17,7 +22,7 @@ public class CameraModeController : MonoBehaviour
         DogsLife
     }
 
-    public CameraModes cameraMode = CameraModes.ThirdPerson;
+    public CameraModes seectedCameraMode = CameraModes.ThirdPerson;
     private CameraModes activeCamera;
 
     [System.Serializable]
@@ -25,7 +30,6 @@ public class CameraModeController : MonoBehaviour
     {
         public float lookSensitivity = 3f;
         public bool inverted = false;
-        public float xAxisBuffer = 10f;
     }
 
     [System.Serializable]
@@ -35,20 +39,16 @@ public class CameraModeController : MonoBehaviour
         public float lookSensetivity = 3f;
         public float minDistance = 5f;
         public float maxDistance = 15f;
-        //prevents the camera from rotating overhead or below feet.
-        public float xAxisBuffer = 10f;
         public float distanceMoveSpeed = 3f;
         public bool inverted = false;
     }
-
-    public GameObject camPoint;
 
     Vector3 cameraStartingPoint;
 
     // Use this for initialization
     void Start()
     {
-        activeCamera = cameraMode;
+        activeCamera = seectedCameraMode;
 
         SwitchCameraMode();
     }
@@ -58,21 +58,24 @@ public class CameraModeController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            if(cameraMode == CameraModes.FirstPerson)
-                cameraMode = CameraModes.ThirdPerson;
+            if(seectedCameraMode == CameraModes.FirstPerson)
+                seectedCameraMode = CameraModes.ThirdPerson;
             else
-                cameraMode = CameraModes.FirstPerson;
+                seectedCameraMode = CameraModes.FirstPerson;
         }
     }
 
+    /// <summary>
+    /// Activates the camera specified in selectedCameraMode.
+    /// </summary>
     void SwitchCameraMode()
     {
-        DeactivateAllCameras();
+        RemoveCameraController();
 
-        activeCamera = cameraMode;
+        activeCamera = seectedCameraMode;
 
         //Might be a better way to do this, but it beats the old one.
-        switch(cameraMode)
+        switch(seectedCameraMode)
         {
             case CameraModes.FirstPerson:
                 gameObject.AddComponent<FirstPersonCameraController>();
@@ -98,18 +101,17 @@ public class CameraModeController : MonoBehaviour
         }
     }
 
-    void DeactivateAllCameras()
+    void RemoveCameraController()
     {
-        //Remove script of type CameraControllerType
+        //Remove script of type CameraController
         Destroy(GetComponent<CameraController>());
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         ChangeCameraMode();
 
-        if (activeCamera != cameraMode)
+        if (activeCamera != seectedCameraMode)
         {
             SwitchCameraMode();
         }
