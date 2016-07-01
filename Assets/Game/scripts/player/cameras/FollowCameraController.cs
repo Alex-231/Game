@@ -7,8 +7,8 @@ public class FollowCameraController : CameraController
     //override position and rotation in construct.
     FollowCameraController()
     {
-        base.camStartingPos = new Vector3(0, 0, -5f);
-        base.pointStartingPos = new Vector3(0, 1f, 0);
+        camStartingPos = new Vector3(0, 0, -5f);
+        pointStartingPos = new Vector3(0, 1f, 0);
     }
 
     // Update is called once per frame

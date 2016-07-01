@@ -7,7 +7,7 @@ public class MovementController : MonoBehaviour
 
     public movementAndRotationSettings movSettings;
     public jumpingAndFallingSettings jumpSettings;
-    ThirdPersonCameraController camController;
+    CameraController camController;
 
     [System.Serializable]
     public class movementAndRotationSettings
@@ -150,9 +150,9 @@ public class MovementController : MonoBehaviour
         moveDirection.y -= jumpSettings.gravity * Time.deltaTime;
 
         //If the character is moving, center the camera and update rotation
-        camController = GetComponent<ThirdPersonCameraController>();
+        camController = GetComponent<CameraController>();
 
-        if (camController != null)
+        if (camController != null && camController.overrideWalking)
         {
             if (inputX != 0 || inputY != 0)
             {

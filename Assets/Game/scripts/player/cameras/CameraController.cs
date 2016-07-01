@@ -3,6 +3,10 @@
 [RequireComponent(typeof(CharacterController))]
 abstract public class CameraController : MonoBehaviour
 {
+    //If the walking boolean needs to be updated, set this to true.
+    public bool overrideWalking = false;
+    public bool walking = false;
+
     //These values represent local positions and rotations!
     [Header("Camera Point")]
     public Vector3 pointStartingPos = Vector3.zero;
@@ -80,5 +84,11 @@ abstract public class CameraController : MonoBehaviour
 
         //Apply rotation
         characterController.transform.Rotate(_rotation);
+    }
+
+
+    public void CenterRotation()
+    {
+        camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
     }
 }

@@ -5,7 +5,7 @@ public class FirstPersonCameraController : CameraController
 {
     FirstPersonCameraController()
     {
-        base.pointStartingPos = new Vector3(0, 1f, 0);
+        pointStartingPos = new Vector3(0, 1f, 0);
     }
 
     // Update is called once per frame

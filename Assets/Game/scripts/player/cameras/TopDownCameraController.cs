@@ -6,8 +6,8 @@ public class TopDownCameraController : CameraController
 
     TopDownCameraController()
     {
-        base.camStartingPos = new Vector3(0, 0, -5f);
-        base.pointStartingRot = new Vector3(90f, 0, 0);
+        camStartingPos = new Vector3(0, 0, -5f);
+        pointStartingRot = new Vector3(90f, 0, 0);
     }
 
     // Update is called once per frame
