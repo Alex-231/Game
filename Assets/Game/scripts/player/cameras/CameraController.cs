@@ -11,10 +11,6 @@ abstract public class CameraController : MonoBehaviour
     /// If the player is walking and overrideWalking is set to true, this will be true.
     /// </summary>
     public bool walking = false;
-    /// <summary>
-    /// If the camera controller should lock the cursor.
-    /// </summary>
-    public bool lockCursor = true;
 
     //These values represent local positions and rotations!
     [Header("Camera Point")]
@@ -33,11 +29,6 @@ abstract public class CameraController : MonoBehaviour
 
     public void Start()
     {
-        if(lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
 
         modeController = GetComponent<CameraModeController>();
         characterController = GetComponent<CharacterController>();
