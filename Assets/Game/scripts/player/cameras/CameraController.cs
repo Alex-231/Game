@@ -3,12 +3,6 @@
 [RequireComponent(typeof(CharacterController))]
 abstract public class CameraController : MonoBehaviour
 {
-    /*
-    TODO:
-    Add Camera Padding.
-    */
-
-
 
     /// <summary>
     /// If the camera needs to react to the player walking, set this to true.

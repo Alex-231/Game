@@ -10,9 +10,9 @@ public class DogsLifeCameraController : CameraController
     //override position and rotation in construct.
     DogsLifeCameraController()
     {
-        camStartingPos = new Vector3(0, 2, -5f);
+        camStartingPos = new Vector3(0, 3, -5f);
         camStartingRot = new Vector3(30f, 0, 0);
-        pointStartingPos = new Vector3(0, 1f, 0);
+        pointStartingPos = new Vector3(0, 2f, 0);
         overrideWalking = true;
     }
 

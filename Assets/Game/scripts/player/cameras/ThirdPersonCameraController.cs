@@ -8,7 +8,7 @@ public class ThirdPersonCameraController : CameraController
     ThirdPersonCameraController()
     {
         camStartingPos = new Vector3(0, 0, -5f);
-        pointStartingPos = new Vector3(0, 1f, 0);
+        pointStartingPos = new Vector3(0, 2f, 0);
         overrideWalking = true;
     }
 

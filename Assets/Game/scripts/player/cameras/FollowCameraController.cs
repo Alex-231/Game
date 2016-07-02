@@ -4,11 +4,13 @@ using System.Collections;
 public class FollowCameraController : CameraController
 {
 
+    //Need to turn the player around on A and D down, and override motion controller.
+
     //override position and rotation in construct.
     FollowCameraController()
     {
         camStartingPos = new Vector3(0, 0, -5f);
-        pointStartingPos = new Vector3(0, 1f, 0);
+        pointStartingPos = new Vector3(0, 2f, 0);
     }
 
     // Update is called once per frame

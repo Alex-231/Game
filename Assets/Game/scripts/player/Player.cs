@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(AnimationController))]
 [RequireComponent(typeof(CameraModeController))]
 [RequireComponent(typeof(MovementController))]
 [RequireComponent(typeof(PlayerOptions))]
