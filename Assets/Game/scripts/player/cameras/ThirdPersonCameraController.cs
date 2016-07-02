@@ -19,7 +19,6 @@ public class ThirdPersonCameraController : CameraController
         LockCamPointZRotation();
         UpdateCameraDistance();
         KeepCameraInsideWalls();
-        KeepCamerWithinPadding();
     }
 
     void RotateCamera()
@@ -42,6 +41,7 @@ public class ThirdPersonCameraController : CameraController
         Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
         _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
+        _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);

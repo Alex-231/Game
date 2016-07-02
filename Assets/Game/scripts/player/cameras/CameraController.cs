@@ -46,7 +46,7 @@ abstract public class CameraController : MonoBehaviour
         camPoint = modeController.camPoint;
 
         //Assign the camera.
-        cam = camPoint.gameObject.transform.GetChild(0).gameObject;
+        cam = camPoint.transform.GetChild(0).gameObject;
 
         //Activate the camera.
         cam.SetActive(true);
@@ -183,15 +183,52 @@ abstract public class CameraController : MonoBehaviour
             cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, chosenCamDistance);
         }
     }
-    public void KeepCamerWithinPadding()
+    public Vector3 KeepCamerWithinPadding(Vector3 _currentRotation, Vector3 _rotation)
     {
-        RaycastHit objectHitInfo = new RaycastHit();
+        //Create a couple of empty gameobjects for calculations.
+        GameObject _desiredCamPoint = new GameObject("_desiredCamPoint");
+        GameObject _desiredCam = new GameObject("_desiredCam");
 
-        bool hitWall = Physics.SphereCast(cam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, Vector3.zero, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
+        //Change the parents.
+        _desiredCamPoint.transform.parent = gameObject.transform;
+        _desiredCam.transform.parent = _desiredCamPoint.transform;
 
-        if (hitWall)
+        //Read the rotation and position from actual gameobjects.
+        _desiredCamPoint.transform.position = camPoint.transform.position;
+        _desiredCamPoint.transform.rotation = camPoint.transform.rotation;
+        _desiredCam.transform.position = cam.transform.position;
+        _desiredCam.transform.rotation = cam.transform.rotation;
+
+        _desiredCamPoint.transform.Rotate(_rotation);
+
+        debugPosition = _desiredCam.transform.position;
+
+        Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, ~modeController.thirdPersonCamSettings.transparent);
+
+        foreach (Collider collision in collisions)
         {
-            Debug.Log("The camera hit a wall.");
+            Vector3 collisionDirection = (collision.ClosestPointOnBounds(_desiredCam.transform.position) - _desiredCam.transform.position).normalized;
+            float collisionDistance = Vector3.Distance(_desiredCam.transform.position, collision.ClosestPointOnBounds(_desiredCam.transform.position));
+            if (collisionDistance == 0)
+                collisionDistance = 1;
+            Vector3 compensationRotation = -(collisionDirection * collisionDistance);
+
+            compensationRotation = new Vector3(compensationRotation.y, compensationRotation.z, compensationRotation.x);
+
+            Debug.DrawRay(_desiredCam.transform.position, collisionDirection, Color.red);
+
+            _rotation += compensationRotation;
         }
+
+        Destroy(_desiredCamPoint);
+
+        return _rotation;
+    }
+
+    Vector3 debugPosition;
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(debugPosition, modeController.thirdPersonCamSettings.cameraPadding);
     }
 }
