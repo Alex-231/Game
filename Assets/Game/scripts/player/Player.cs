@@ -5,11 +5,11 @@
 [RequireComponent(typeof(PlayerOptions))]
 public class Player : MonoBehaviour {
 
-    public bool lockCamera = true;
+    public bool lockCursor = true;
 
 	// Use this for initialization
 	void Start () {
-        if (lockCamera)
+        if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

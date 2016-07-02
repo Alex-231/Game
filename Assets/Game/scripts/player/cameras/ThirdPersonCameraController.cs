@@ -27,25 +27,27 @@ public class ThirdPersonCameraController : CameraController
 
         float _xRot = Input.GetAxisRaw("Mouse Y");
 
-        if (walking)
+        if (_xRot != 0 || _yRot != 0 || walking)
         {
-            RotatePlayer(_yRot);
-            _yRot = 0;
+            if (walking)
+            {
+                RotatePlayer(_yRot);
+                _yRot = 0;
+            }
+
+            if (modeController.thirdPersonCamSettings.inverted)
+            {
+                _xRot = -_xRot;
+            }
+
+            Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+
+            _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
+            _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+
+            //Apply rotation
+            camPoint.transform.Rotate(_camPointRotate);
         }
-
-        if (modeController.thirdPersonCamSettings.inverted)
-        {
-            _xRot = -_xRot;
-        }
-
-        Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
-
-        _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-        _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
-
-        //Apply rotation
-        camPoint.transform.Rotate(_camPointRotate);
-
     }
 
     void RotatePlayer(float _yRot)

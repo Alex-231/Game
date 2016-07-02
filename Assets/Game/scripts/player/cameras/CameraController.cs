@@ -199,36 +199,27 @@ abstract public class CameraController : MonoBehaviour
         _desiredCam.transform.position = cam.transform.position;
         _desiredCam.transform.rotation = cam.transform.rotation;
 
+        //Rotate the empty gameobject by the desired amount.
         _desiredCamPoint.transform.Rotate(_rotation);
 
-        debugPosition = _desiredCam.transform.position;
+        float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
 
+        //Overlap sphere onto desired camera position.
         Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, ~modeController.thirdPersonCamSettings.transparent);
-
-        foreach (Collider collision in collisions)
+        foreach(Collider collision in collisions)
         {
-            Vector3 collisionDirection = (collision.ClosestPointOnBounds(_desiredCam.transform.position) - _desiredCam.transform.position).normalized;
-            float collisionDistance = Vector3.Distance(_desiredCam.transform.position, collision.ClosestPointOnBounds(_desiredCam.transform.position));
-            if (collisionDistance == 0)
-                collisionDistance = 1;
-            Vector3 compensationRotation = -(collisionDirection * collisionDistance);
+            Vector3 collisionDirectionFromCamera = collision.ClosestPointOnBounds(_desiredCam.transform.position) - _desiredCam.transform.position;
+            float collisionDistanceFromCamera = Vector3.Distance(collision.ClosestPointOnBounds(_desiredCam.transform.position), _desiredCam.transform.position);
+            float collisionDistanceFromPadding = modeController.thirdPersonCamSettings.cameraPadding - collisionDistanceFromCamera;
 
-            compensationRotation = new Vector3(compensationRotation.y, compensationRotation.z, compensationRotation.x);
+            //Draws lines at collision points.
+            //Debug.DrawLine(_desiredCam.transform.position, collision.ClosestPointOnBounds(_desiredCam.transform.position), Color.red);
 
-            Debug.DrawRay(_desiredCam.transform.position, collisionDirection, Color.red);
-
-            _rotation += compensationRotation;
+            _rotation = Vector3.Scale(_rotation, -collisionDirectionFromCamera);
         }
 
         Destroy(_desiredCamPoint);
 
         return _rotation;
-    }
-
-    Vector3 debugPosition;
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(debugPosition, modeController.thirdPersonCamSettings.cameraPadding);
     }
 }
