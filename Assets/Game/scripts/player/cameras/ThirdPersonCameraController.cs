@@ -19,6 +19,7 @@ public class ThirdPersonCameraController : CameraController
         LockCamPointZRotation();
         UpdateCameraDistance();
         KeepCameraInsideWalls();
+        KeepCamerWithinPadding();
     }
 
     void RotateCamera()

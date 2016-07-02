@@ -40,6 +40,7 @@ public class CameraModeController : MonoBehaviour
         public float minDistance = 5f;
         public float maxDistance = 15f;
         public float distanceMoveSpeed = 3f;
+        public float cameraPadding = 1f;
         public bool inverted = false;
     }
 

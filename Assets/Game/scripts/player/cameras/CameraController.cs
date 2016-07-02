@@ -3,6 +3,13 @@
 [RequireComponent(typeof(CharacterController))]
 abstract public class CameraController : MonoBehaviour
 {
+    /*
+    TODO:
+    Add Camera Padding.
+    */
+
+
+
     /// <summary>
     /// If the camera needs to react to the player walking, set this to true.
     /// </summary>
@@ -174,6 +181,17 @@ abstract public class CameraController : MonoBehaviour
         else if (cam.transform.localPosition.z != chosenCamDistance)
         {
             cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, chosenCamDistance);
+        }
+    }
+    public void KeepCamerWithinPadding()
+    {
+        RaycastHit objectHitInfo = new RaycastHit();
+
+        bool hitWall = Physics.SphereCast(cam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, Vector3.zero, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
+
+        if (hitWall)
+        {
+            Debug.Log("The camera hit a wall.");
         }
     }
 }
