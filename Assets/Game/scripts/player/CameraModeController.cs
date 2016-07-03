@@ -15,6 +15,7 @@ public class CameraModeController : MonoBehaviour
     {
         FirstPerson,
         ThirdPerson,
+        Shoulder,
         TopDown,
         FlyCam,
         Static,
@@ -83,6 +84,9 @@ public class CameraModeController : MonoBehaviour
                 break;
             case CameraModes.ThirdPerson:
                 gameObject.AddComponent<ThirdPersonCameraController>();
+                break;
+            case CameraModes.Shoulder:
+                gameObject.AddComponent<ShoulderCameraController>();
                 break;
             case CameraModes.FlyCam:
                 gameObject.AddComponent<FlyCameraController>();
