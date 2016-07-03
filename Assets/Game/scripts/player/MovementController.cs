@@ -4,13 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class MovementController : MonoBehaviour
 {
-    /*
-    Found A Bug In This Class.
-    For some reason, when the player is standing on the edge of a raised surface, they jump forever and cannot move.
-    Needs to be fixed before merge with master
-    */
-
-
     public movementAndRotationSettings movSettings;
     public jumpingAndFallingSettings jumpSettings;
     CameraController camController;

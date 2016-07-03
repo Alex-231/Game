@@ -159,24 +159,46 @@ abstract public class CameraController : MonoBehaviour
         return _rotate;
     }
 
-    public void KeepCameraInsideWalls()
+    public void KeepCameraInsideWalls(Vector3 _currentRotation, Vector3 _rotation)
     {
-        RaycastHit objectHitInfo = new RaycastHit();
-        float cameraDistance = Vector3.Distance(transform.position, cam.transform.position);
+        //Create a couple of empty gameobjects for calculations.
+        GameObject _desiredCamPoint = new GameObject("_desiredCamPoint");
+        GameObject _desiredCam = new GameObject("_desiredCam");
 
-        bool hitWall = Physics.Raycast(transform.position, (cam.transform.position - transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
+        //Change the parents.
+        _desiredCamPoint.transform.parent = gameObject.transform;
+        _desiredCam.transform.parent = _desiredCamPoint.transform;
+
+        //Read the rotation and position from actual gameobjects.
+        _desiredCamPoint.transform.position = camPoint.transform.position;
+        _desiredCamPoint.transform.rotation = camPoint.transform.rotation;
+        _desiredCam.transform.position = cam.transform.position;
+        _desiredCam.transform.rotation = cam.transform.rotation;
+
+        //Rotate the empty gameobject by the desired amount.
+        _desiredCamPoint.transform.Rotate(_rotation);
+
+
+
+        RaycastHit objectHitInfo = new RaycastHit();
+        float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
+
+        bool hitWall = Physics.Raycast(_desiredCamPoint.transform.position, (_desiredCam.transform.position - _desiredCamPoint.transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
         //Debug.DrawLine(transform.position, cam.transform.position, Color.red);
         //Debug.DrawRay(transform.position, (cam.transform.position - transform.position).normalized, Color.white);
         if (hitWall)
         {
-            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance));
+            ChangeCameraOffset(_desiredCam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance) + modeController.thirdPersonCamSettings.cameraPadding);
             //Debug.Log("The camera linecast hit a wall.");
         }
         else if (cam.transform.localPosition.z != chosenCamDistance)
         {
             cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, chosenCamDistance);
         }
+
+        Destroy(_desiredCamPoint);
     }
+
     public Vector3 KeepCamerWithinPadding(Vector3 _currentRotation, Vector3 _rotation)
     {
         //Create a couple of empty gameobjects for calculations.
@@ -192,6 +214,8 @@ abstract public class CameraController : MonoBehaviour
         _desiredCamPoint.transform.rotation = camPoint.transform.rotation;
         _desiredCam.transform.position = cam.transform.position;
         _desiredCam.transform.rotation = cam.transform.rotation;
+
+
 
         //Rotate the empty gameobject by the desired amount.
         _desiredCamPoint.transform.Rotate(_rotation);
