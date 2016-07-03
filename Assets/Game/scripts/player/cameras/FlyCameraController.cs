@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlyCameraController : CameraController
+public class FlyCameraController : ThirdPersonCameraController
 {
     MovementController movController;
     void Start()

@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FollowCameraController : CameraController
+public class FollowCameraController : ThirdPersonCameraController
 {
-
-    //Need to turn the player around on A and D down, and override motion controller.
+    bool allowYRotation = true;
 
     //override position and rotation in construct.
     FollowCameraController()
@@ -17,24 +16,46 @@ public class FollowCameraController : CameraController
     void Update()
     {
         RotateCamera();
+        LockCamPointZRotation();
         RotatePlayer();
         UpdateCameraDistance();
     }
 
-    void RotateCamera()
+    public void RotateCamera()
     {
-        float _xRot = -Input.GetAxisRaw("Mouse Y");
+        float _yRot = Input.GetAxisRaw("Mouse X");
+        float _xRot = Input.GetAxisRaw("Mouse Y");
 
-        if (modeController.thirdPersonCamSettings.inverted)
+        if (_xRot != 0 || _yRot != 0 || walking)
         {
-            _xRot = -_xRot;
+            if (!allowYRotation || walking)
+            {
+                _yRot = 0;
+            }
+
+            if (modeController.thirdPersonCamSettings.inverted)
+            {
+                _xRot = -_xRot;
+            }
+
+            Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+
+            _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
+            _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+            KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+
+            //Apply rotation
+            camPoint.transform.Rotate(_camPointRotate);
         }
+    }
 
-        Vector3 _camPointRotation = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+    void RotatePlayer()
+    {
+        float _yRot = Input.GetAxis("Horizontal");
 
-        _camPointRotation = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camPointRotation);
+        Vector3 _rotation = new Vector3(0f, _yRot, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
 
         //Apply rotation
-        camPoint.transform.Rotate(_camPointRotation);
+        characterController.transform.Rotate(_rotation);
     }
 }

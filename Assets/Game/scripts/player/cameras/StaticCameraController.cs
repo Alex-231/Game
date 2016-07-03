@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StaticCameraController : CameraController
+public class StaticCameraController : ThirdPersonCameraController
 {
     Vector3 cameraPosition;
     Quaternion cameraRotation;
 
-    // Use this for initialization
+    StaticCameraController()
+    {
+        camStartingPos = new Vector3(0, 2f, 0);
+    }
+
     void Start()
     {
         //Runs inherited method
@@ -17,7 +21,6 @@ public class StaticCameraController : CameraController
         cameraRotation = cam.transform.rotation;
     }
 
-    // Update is called once per frame
     void Update()
     {
         RotatePlayer();

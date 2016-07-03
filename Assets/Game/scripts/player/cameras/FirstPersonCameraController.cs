@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FirstPersonCameraController : CameraController
 {
-    FirstPersonCameraController()
+    public FirstPersonCameraController()
     {
         pointStartingPos = new Vector3(0, 2f, 0);
     }

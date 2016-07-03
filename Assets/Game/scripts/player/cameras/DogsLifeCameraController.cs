@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// A camera controller loosly based on the game Dog's Life for the PS2.
 /// </summary>
-public class DogsLifeCameraController : CameraController
+public class DogsLifeCameraController : ThirdPersonCameraController
 {
 
     //override position and rotation in construct.
@@ -13,7 +13,6 @@ public class DogsLifeCameraController : CameraController
         camStartingPos = new Vector3(0, 3, -5f);
         camStartingRot = new Vector3(30f, 0, 0);
         pointStartingPos = new Vector3(0, 2f, 0);
-        overrideWalking = true;
     }
 
     // Update is called once per frame
@@ -27,7 +26,6 @@ public class DogsLifeCameraController : CameraController
     void RotateCamera()
     {
         float _yRot = Input.GetAxisRaw("Mouse X");
-
         float _xRot = Input.GetAxisRaw("Mouse Y");
 
         if (walking)
@@ -41,21 +39,16 @@ public class DogsLifeCameraController : CameraController
             _xRot = -_xRot;
         }
 
-        Vector3 _camPointRotation = new Vector3(0, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
-        Vector3 _camRotation = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+        Vector3 _camPointRotate = new Vector3(0, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
+        Vector3 _camRotate = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
-        _camRotation = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camRotation);
+        _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+        KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
-        //Apply rotation
-        camPoint.transform.Rotate(_camPointRotation);
-        cam.transform.Rotate(_camRotation);
-    }
-
-    void RotatePlayer(float _yRot)
-    {
-        Vector3 _rotation = new Vector3(0f, _yRot, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
+        _camRotate = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camRotate);
 
         //Apply rotation
-        characterController.transform.Rotate(_rotation);
+        camPoint.transform.Rotate(_camPointRotate);
+        cam.transform.Rotate(_camRotate);
     }
 }

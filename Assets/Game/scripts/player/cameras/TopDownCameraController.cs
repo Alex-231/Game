@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TopDownCameraController : CameraController
+public class TopDownCameraController : ThirdPersonCameraController
 {
+    bool turnCamera = false;
 
     TopDownCameraController()
     {
@@ -10,11 +11,13 @@ public class TopDownCameraController : CameraController
         pointStartingRot = new Vector3(90f, 0, 0);
     }
 
-    // Update is called once per frame
     void Update()
     {
         RotatePlayer();
-        UpdateCameraRotation();
+
+        if (!turnCamera)
+            UpdateCameraRotation();
+
         UpdateCameraDistance();
     }
 

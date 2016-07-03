@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShoulderCameraController : CameraController {
+public class ShoulderCameraController : ThirdPersonCameraController {
 
     ShoulderCameraController()
     {
@@ -16,6 +16,7 @@ public class ShoulderCameraController : CameraController {
         RotateCamera();
         LockCamPointZRotation();
         LockCamPointYRotation();
+        KeepCameraInPosition();
     }
 
     void RotateCamera()
@@ -29,11 +30,18 @@ public class ShoulderCameraController : CameraController {
             _xRot = -_xRot;
         }
 
-        Vector3 _rotation = new Vector3(_xRot, 0f, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
+        Vector3 _camPointRotate = new Vector3(_xRot, 0f, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
 
-        _rotation = ApplyXBufferToRotation(cam.transform.eulerAngles, _rotation);
+        _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
+        _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+        KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
-        camPoint.transform.Rotate(_rotation);
+        camPoint.transform.Rotate(_camPointRotate);
+    }
+
+    void KeepCameraInPosition()
+    {
+        cam.transform.localPosition = camStartingPos;
     }
 }
