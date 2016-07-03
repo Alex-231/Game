@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class CameraModeController : MonoBehaviour
 {
@@ -13,17 +14,18 @@ public class CameraModeController : MonoBehaviour
 
     public enum CameraModes
     {
-        FirstPerson,
-        ThirdPerson,
-        Shoulder,
-        TopDown,
-        FlyCam,
-        Static,
-        Follow,
-        DogsLife
+        FirstPerson = 0,
+        ThirdPerson = 1,
+        Shoulder = 2,
+        TopDown = 3,
+        FlyCam = 4,
+        Static = 5,
+        Follow = 6,
+        DogsLife = 7,
+        SceneOverview = 8
     }
 
-    public CameraModes seectedCameraMode = CameraModes.ThirdPerson;
+    public CameraModes selectedCameraMode = CameraModes.ThirdPerson;
     private CameraModes activeCamera;
 
     [System.Serializable]
@@ -52,7 +54,7 @@ public class CameraModeController : MonoBehaviour
     {
         camPoint = this.gameObject;
 
-        activeCamera = seectedCameraMode;
+        activeCamera = selectedCameraMode;
 
         SwitchCameraMode();
     }
@@ -62,24 +64,30 @@ public class CameraModeController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            if(seectedCameraMode == CameraModes.FirstPerson)
-                seectedCameraMode = CameraModes.ThirdPerson;
-            else
-                seectedCameraMode = CameraModes.FirstPerson;
+            //if(seectedCameraMode == CameraModes.FirstPerson)
+            //    seectedCameraMode = CameraModes.ThirdPerson;
+            //else
+            //    seectedCameraMode = CameraModes.FirstPerson;
+
+            selectedCameraMode++;
+
+            if ((int)selectedCameraMode == Enum.GetNames(typeof(CameraModes)).Length)
+            {
+                selectedCameraMode = 0;
+            }
+
         }
     }
 
-    /// <summary>
-    /// Activates the camera specified in selectedCameraMode.
-    /// </summary>
+    //Activates the camera specified in selectedCameraMode.
     void SwitchCameraMode()
     {
         RemoveCameraController();
 
-        activeCamera = seectedCameraMode;
+        activeCamera = selectedCameraMode;
 
         //Might be a better way to do this, but it beats the old one.
-        switch(seectedCameraMode)
+        switch(selectedCameraMode)
         {
             case CameraModes.FirstPerson:
                 gameObject.AddComponent<FirstPersonCameraController>();
@@ -105,6 +113,9 @@ public class CameraModeController : MonoBehaviour
             case CameraModes.DogsLife:
                 gameObject.AddComponent<DogsLifeCameraController>();
                 break;
+            case CameraModes.SceneOverview:
+                gameObject.AddComponent<SceneOverviewCameraController>();
+                break;
         }
     }
 
@@ -123,7 +134,7 @@ public class CameraModeController : MonoBehaviour
     {
         ChangeCameraMode();
 
-        if (activeCamera != seectedCameraMode)
+        if (activeCamera != selectedCameraMode)
         {
             SwitchCameraMode();
         }

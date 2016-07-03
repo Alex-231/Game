@@ -6,7 +6,7 @@ public class MovementController : MonoBehaviour
 {
     public movementAndRotationSettings movSettings;
     public jumpingAndFallingSettings jumpSettings;
-    ThirdPersonCameraController camController;
+    CameraController camController;
 
     [System.Serializable]
     public class movementAndRotationSettings
@@ -149,22 +149,26 @@ public class MovementController : MonoBehaviour
         moveDirection.y -= jumpSettings.gravity * Time.deltaTime;
 
         //If the character is moving, center the camera and update rotation
-        camController =  GameObject.FindGameObjectWithTag("cameraPoint").GetComponent<ThirdPersonCameraController>();
+        camController =  GameObject.FindGameObjectWithTag("cameraPoint").GetComponent<CameraController>();
 
-        if (camController != null)
+        if (camController is ThirdPersonCameraController && ((ThirdPersonCameraController)camController).overrideWalking)
         {
+            //Cast camController to ThirdPersonCamController.
+            ThirdPersonCameraController thirdPersonCamController = (ThirdPersonCameraController)camController;
+
             if (inputX != 0 || inputY != 0)
             {
-                if (!camController.walking)
+                if (!thirdPersonCamController.walking)
                 {
+                    //Make the player face the camera.
                     gameObject.transform.eulerAngles = new Vector3(0, camController.camPoint.gameObject.transform.eulerAngles.y, 0);
                 }
-                camController.walking = true;
-                camController.CenterCamPointAxisY();
+                thirdPersonCamController.walking = true;
+                thirdPersonCamController.CenterCamPointAxisY();
             }
             else
             {
-                camController.walking = false;
+                thirdPersonCamController.walking = false;
             }
         }
 

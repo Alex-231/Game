@@ -8,7 +8,7 @@ public class FlyCameraController : ThirdPersonCameraController
     {
         base.Start();
 
-        movController = GetComponent<MovementController>();
+        movController = playerTransform.gameObject.GetComponent<MovementController>();
         movController.enabled = false;
     }
 

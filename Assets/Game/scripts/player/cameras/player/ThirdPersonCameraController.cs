@@ -7,7 +7,11 @@ public class ThirdPersonCameraController : PlayerCameraController
     CREATED A BUG:
     When the KeepCameraWithinWalls method is called, the camera position moves.
     Possible Solution: use base.startingpos in constructors.
+                       update KeepCameraWithinWalls !hitWall code.
     */
+
+    //If override walking is enabled, 
+    public bool overrideWalking = true;
 
     //If the player is walking and overrideWalking is set to true, this will be true.
     public bool walking = false;
