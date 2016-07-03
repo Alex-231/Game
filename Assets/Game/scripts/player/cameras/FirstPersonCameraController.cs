@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirstPersonCameraController : CameraController
+public class FirstPersonCameraController : PlayerCameraController
 {
     public FirstPersonCameraController()
     {
-        pointStartingPos = new Vector3(0, 2f, 0);
+        pointStartingPos = new Vector3(0, 1.7f, 0);
     }
 
     // Update is called once per frame

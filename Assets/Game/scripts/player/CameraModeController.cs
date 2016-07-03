@@ -50,6 +50,8 @@ public class CameraModeController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        camPoint = this.gameObject;
+
         activeCamera = seectedCameraMode;
 
         SwitchCameraMode();
@@ -104,6 +106,11 @@ public class CameraModeController : MonoBehaviour
                 gameObject.AddComponent<DogsLifeCameraController>();
                 break;
         }
+    }
+
+    public void ChangeCameraParent(Transform _newParent)
+    {
+        gameObject.transform.parent = _newParent;
     }
 
     void RemoveCameraController()

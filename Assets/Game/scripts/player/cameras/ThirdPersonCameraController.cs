@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ThirdPersonCameraController : CameraController
+public class ThirdPersonCameraController : PlayerCameraController
 {
     /*
     CREATED A BUG:
     When the KeepCameraWithinWalls method is called, the camera position moves.
     Possible Solution: use base.startingpos in constructors.
     */
-    
+
     //If the player is walking and overrideWalking is set to true, this will be true.
     public bool walking = false;
 
@@ -84,7 +84,7 @@ public class ThirdPersonCameraController : CameraController
         GameObject _desiredCam = new GameObject("_desiredCam");
 
         //Change the parents.
-        _desiredCamPoint.transform.parent = gameObject.transform;
+        _desiredCamPoint.transform.parent = playerTransform;
         _desiredCam.transform.parent = _desiredCamPoint.transform;
 
         //Read the rotation and position from actual gameobjects.
@@ -123,7 +123,7 @@ public class ThirdPersonCameraController : CameraController
         GameObject _desiredCam = new GameObject("_desiredCam");
 
         //Change the parents.
-        _desiredCamPoint.transform.parent = gameObject.transform;
+        _desiredCamPoint.transform.parent = playerTransform;
         _desiredCam.transform.parent = _desiredCamPoint.transform;
 
         //Read the rotation and position from actual gameobjects.

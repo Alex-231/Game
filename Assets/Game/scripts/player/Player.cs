@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(AnimationController))]
-[RequireComponent(typeof(CameraModeController))]
 [RequireComponent(typeof(MovementController))]
 [RequireComponent(typeof(PlayerOptions))]
 public class Player : MonoBehaviour {
@@ -15,6 +14,8 @@ public class Player : MonoBehaviour {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        this.gameObject.tag = "localPlayer";
     }
 	
 	// Update is called once per frame

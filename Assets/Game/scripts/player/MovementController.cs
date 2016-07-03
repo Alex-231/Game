@@ -149,7 +149,7 @@ public class MovementController : MonoBehaviour
         moveDirection.y -= jumpSettings.gravity * Time.deltaTime;
 
         //If the character is moving, center the camera and update rotation
-        camController = GetComponent<ThirdPersonCameraController>();
+        camController =  GameObject.FindGameObjectWithTag("cameraPoint").GetComponent<ThirdPersonCameraController>();
 
         if (camController != null)
         {
