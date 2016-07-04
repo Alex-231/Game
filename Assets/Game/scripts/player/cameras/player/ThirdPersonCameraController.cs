@@ -4,10 +4,9 @@ using System.Collections;
 public class ThirdPersonCameraController : PlayerCameraController
 {
     /*
-    CREATED A BUG:
-    When the KeepCameraWithinWalls method is called, the camera position moves.
-    Possible Solution: use base.startingpos in constructors.
-                       update KeepCameraWithinWalls !hitWall code.
+    TODO:
+    The KeepCameraWithinPadding method needs to change the offset to allow more rotation.
+    Possible Solution: run method, if resulting rotation = Vector3.zero, decrease camera distance and try again.
     */
 
     //If override walking is enabled, 
@@ -25,6 +24,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         RotateCamera();
         LockCamPointZRotation();
         UpdateCameraDistance();
+        KeepCameraInsideWalls();
     }
 
     //override position and rotation in construct.
@@ -35,7 +35,7 @@ public class ThirdPersonCameraController : PlayerCameraController
     }
 
     //Add chosenCamDistance assignment to the inherited start method.
-    void Start()
+    public void Start()
     {
         base.Start();
 
@@ -63,7 +63,7 @@ public class ThirdPersonCameraController : PlayerCameraController
             Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
             _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+            _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
             KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
             //Apply rotation
@@ -79,6 +79,24 @@ public class ThirdPersonCameraController : PlayerCameraController
         characterController.transform.Rotate(_rotation);
     }
 
+
+    //Some camera controllers aren't very friendly, and the KeepCameraInsideWalls rotation method just isn't enough.
+    //This method works though, so if a controller is clipping through a wall every frame, add this to the update. Should fix it.
+    public void KeepCameraInsideWalls()
+    {
+        RaycastHit objectHitInfo = new RaycastHit();
+        float cameraDistance = Vector3.Distance(transform.position, cam.transform.position);
+
+        bool hitWall = Physics.Raycast(transform.position, (cam.transform.position - transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
+        if (hitWall)
+        {
+            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance));
+        }
+        else if (cam.transform.localPosition.z != chosenCamDistance)
+        {
+
+        }
+    }
 
     public void KeepCameraInsideWalls(Vector3 _currentRotation, Vector3 _rotation)
     {
@@ -119,7 +137,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         Destroy(_desiredCamPoint);
     }
 
-    public Vector3 KeepCamerWithinPadding(Vector3 _currentRotation, Vector3 _rotation)
+    public Vector3 ApplyCameraPaddingToRotation(Vector3 _currentRotation, Vector3 _rotation)
     {
         #region prepare desired game objects
         //Create a couple of empty gameobjects for calculations.
@@ -171,7 +189,7 @@ public class ThirdPersonCameraController : PlayerCameraController
 
     void ChangeCameraOffset(float newLocation)
     {
-        cam.transform.localPosition = new Vector3(0, 0, newLocation);
+        cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, newLocation);
     }
 
     //Moves the camera forwards or backwards, within the min and max boundries, when the player scrolls.

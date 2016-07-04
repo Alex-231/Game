@@ -41,7 +41,7 @@ public class FollowCameraController : ThirdPersonCameraController
             Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
             _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            _camPointRotate = KeepCamerWithinPadding(camPoint.transform.eulerAngles, _camPointRotate);
+            _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
             KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
             //Apply rotation
