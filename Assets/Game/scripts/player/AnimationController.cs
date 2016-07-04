@@ -18,10 +18,19 @@ public class AnimationController : MonoBehaviour {
         attachedAnimator.SetFloat("verticalSpeed", Input.GetAxis("Vertical"));
         attachedAnimator.SetFloat("horizontalSpeed", Input.GetAxis("Horizontal"));
 
-        if (Input.GetButton("Jump"))
+        //if (Input.GetButton("Jump"))
+        //{
+        //    attachedAnimator.SetBool("jumping", true);
+        //    Invoke("StopJumping", 0.1f);
+        //}
+
+        if (Input.GetButton("Run"))
         {
-            attachedAnimator.SetBool("jumping", true);
-            Invoke("StopJumping", 0.1f);
+            attachedAnimator.SetBool("running", true);
+        }
+        else
+        {
+            attachedAnimator.SetBool("running", false);
         }
 	}
 
