@@ -17,7 +17,7 @@ public class ShoulderCameraController : ThirdPersonCameraController {
         LockCamPointZRotation();
         LockCamPointYRotation();
         KeepCameraInPosition();
-        KeepCameraInsideWalls();
+        //KeepCameraInsideWalls();
     }
 
     void RotateCamera()
@@ -35,7 +35,7 @@ public class ShoulderCameraController : ThirdPersonCameraController {
 
         _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
         _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-        KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+        //KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);

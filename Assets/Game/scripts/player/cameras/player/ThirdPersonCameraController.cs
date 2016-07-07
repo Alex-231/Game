@@ -24,7 +24,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         RotateCamera();
         LockCamPointZRotation();
         UpdateCameraDistance();
-        KeepCameraInsideWalls();
+        //KeepCameraInsideWalls();
     }
 
     //override position and rotation in construct.
@@ -64,7 +64,7 @@ public class ThirdPersonCameraController : PlayerCameraController
 
             _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
             _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+            //KeepCameraInsideWalls(_camPointRotate);
 
             //Apply rotation
             camPoint.transform.Rotate(_camPointRotate);
@@ -82,59 +82,20 @@ public class ThirdPersonCameraController : PlayerCameraController
 
     //Some camera controllers aren't very friendly, and the KeepCameraInsideWalls rotation method just isn't enough.
     //This method works though, so if a controller is clipping through a wall every frame, add this to the update. Should fix it.
-    public void KeepCameraInsideWalls()
+    public void KeepCameraInsideWalls(Vector3 _castToPos)
     {
         RaycastHit objectHitInfo = new RaycastHit();
-        float cameraDistance = Vector3.Distance(transform.position, cam.transform.position);
+        float castDistance = Vector3.Distance(transform.position, _castToPos);
 
-        bool hitWall = Physics.Raycast(transform.position, (cam.transform.position - transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
+        bool hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, castDistance, ~modeController.thirdPersonCamSettings.transparent);
         if (hitWall)
         {
-            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance));
+            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - castDistance));
         }
-        else if (cam.transform.localPosition.z != chosenCamDistance)
+        else
         {
-
+            ChangeCameraOffset(chosenCamDistance);
         }
-    }
-
-    public void KeepCameraInsideWalls(Vector3 _currentRotation, Vector3 _rotation)
-    {
-        #region prepare desired game objects
-        //Create a couple of empty gameobjects for calculations.
-        GameObject _desiredCamPoint = new GameObject("_desiredCamPoint");
-        GameObject _desiredCam = new GameObject("_desiredCam");
-
-        //Change the parents.
-        _desiredCamPoint.transform.parent = playerTransform;
-        _desiredCam.transform.parent = _desiredCamPoint.transform;
-
-        //Read the rotation and position from actual gameobjects.
-        _desiredCamPoint.transform.position = camPoint.transform.position;
-        _desiredCamPoint.transform.rotation = camPoint.transform.rotation;
-        _desiredCam.transform.position = cam.transform.position;
-        _desiredCam.transform.rotation = cam.transform.rotation;
-
-        //Rotate the empty gameobject by the desired amount.
-        _desiredCamPoint.transform.Rotate(_rotation);
-        #endregion
-
-        #region Raycast and correct camera distance.
-        RaycastHit objectHitInfo = new RaycastHit();
-        float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
-
-        bool hitWall = Physics.Raycast(_desiredCamPoint.transform.position, (_desiredCam.transform.position - _desiredCamPoint.transform.position).normalized, out objectHitInfo, -chosenCamDistance, ~modeController.thirdPersonCamSettings.transparent);
-        if (hitWall)
-        {
-            ChangeCameraOffset(_desiredCam.transform.localPosition.z - (objectHitInfo.distance - cameraDistance) + modeController.thirdPersonCamSettings.cameraPadding);
-        }
-        else if (cam.transform.localPosition.z != chosenCamDistance)
-        {
-            cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, chosenCamDistance);
-        }
-        #endregion
-
-        Destroy(_desiredCamPoint);
     }
 
     public Vector3 ApplyCameraPaddingToRotation(Vector3 _currentRotation, Vector3 _rotation)
@@ -163,17 +124,18 @@ public class ThirdPersonCameraController : PlayerCameraController
 
         //Overlap sphere onto desired camera position.
         Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, ~modeController.thirdPersonCamSettings.transparent);
-        foreach (Collider collision in collisions)
+        if (collisions.Length > 0)
         {
-            Vector3 collisionDirectionFromCamera = collision.ClosestPointOnBounds(_desiredCam.transform.position) - _desiredCam.transform.position;
-            float collisionDistanceFromCamera = Vector3.Distance(collision.ClosestPointOnBounds(_desiredCam.transform.position), _desiredCam.transform.position);
-            float collisionDistanceFromPadding = modeController.thirdPersonCamSettings.cameraPadding - collisionDistanceFromCamera;
-
-            //Draws lines at collision points.
-            //Debug.DrawLine(_desiredCam.transform.position, collision.ClosestPointOnBounds(_desiredCam.transform.position), Color.red);
-
-            _rotation = Vector3.Scale(_rotation, -collisionDirectionFromCamera);
+            foreach (Collider collision in collisions)
+            {
+                KeepCameraInsideWalls(collision.ClosestPointOnBounds(_desiredCam.transform.position));
+            }
         }
+        else
+        {
+            KeepCameraInsideWalls(_desiredCam.transform.position);
+        }
+
         #endregion
 
         Destroy(_desiredCamPoint);

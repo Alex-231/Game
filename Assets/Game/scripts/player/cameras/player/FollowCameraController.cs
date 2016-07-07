@@ -42,7 +42,7 @@ public class FollowCameraController : ThirdPersonCameraController
 
             _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
             _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+            //KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
             //Apply rotation
             camPoint.transform.Rotate(_camPointRotate);
