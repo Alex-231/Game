@@ -88,13 +88,26 @@ public class ThirdPersonCameraController : PlayerCameraController
         float castDistance = Vector3.Distance(transform.position, _castToPos);
 
         bool hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, castDistance, ~modeController.thirdPersonCamSettings.transparent);
+        float newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
         if (hitWall)
         {
             ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - castDistance));
         }
         else
         {
-            ChangeCameraOffset(chosenCamDistance);
+            hitWall = Physics.Raycast(transform.position, transform.position - _castToPos, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
+            newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
+            if (hitWall)
+            {
+                if (newCamDistance < chosenCamDistance)
+                {
+                    ChangeCameraOffset(chosenCamDistance);
+                }
+                else
+                {
+                    ChangeCameraOffset(newCamDistance);
+                }
+            }
         }
     }
 
@@ -120,7 +133,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         #endregion
 
         #region Overlap sphere and correct rotation.
-        float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
+        //float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
 
         //Overlap sphere onto desired camera position.
         Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, ~modeController.thirdPersonCamSettings.transparent);
@@ -128,6 +141,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         {
             foreach (Collider collision in collisions)
             {
+                Debug.DrawLine(collision.ClosestPointOnBounds(_desiredCam.transform.position), _desiredCam.transform.position, Color.red);
                 KeepCameraInsideWalls(collision.ClosestPointOnBounds(_desiredCam.transform.position));
             }
         }
