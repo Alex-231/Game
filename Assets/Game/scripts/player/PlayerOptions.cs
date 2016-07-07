@@ -5,7 +5,7 @@ using System;
 public class PlayerOptions : MonoBehaviour {
 
     [SerializeField]
-    public JumpTypes selectedJump = new StandardJump();
+    public JumpTypes selectedJump = new OneJump();
 
     abstract public class JumpTypes
     {
@@ -15,9 +15,9 @@ public class PlayerOptions : MonoBehaviour {
         abstract public void Jump();
     }
 
-    public class StandardJump : JumpTypes
+    public class DoubleJump : JumpTypes
     {
-        public string jumpName = "Standard";
+        public string jumpName = "Double";
         public float jumpDuration = 1;
         public int jumpCount = 3;
         public override void Jump()
@@ -67,6 +67,54 @@ public class PlayerOptions : MonoBehaviour {
         public override void Jump()
         {
             //initial jump only.
+        }
+    }
+
+    public class MagicElement
+    {
+
+        public class FireElement
+        {
+            public enum AvailableJumps
+            {
+                OneJump,
+                LiftJump,
+                GlideJump,
+                DoubleJump
+            }
+            //public enum GrenadeTypes
+            //{
+
+            //}
+            public enum PrimaryAttacks
+            {
+                Tornado,
+                Bolt,
+                Orb,
+                DoubleOrb
+            }
+            public enum SpecialAttacks
+            {
+                Blast,
+                Healing,
+                Shield
+            }
+            public enum SuperAttacks
+            {
+                FasterRecharge,
+                LongerSuper,
+                SelfRevive
+            }
+        }
+
+        public class WaterElement
+        {
+
+        }
+
+        public class LightningElement
+        {
+
         }
     }
 }
