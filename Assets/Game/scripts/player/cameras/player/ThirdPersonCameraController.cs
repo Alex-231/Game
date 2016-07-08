@@ -99,7 +99,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         {
             hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
             //Update the newCamDistance for the last raycast.
-            newCamDistance = (cam.transform.localPosition.z - (objectHitInfo.distance - castDistance)) * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
+            newCamDistance = -objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
             if (hitWall)
             {
                 //If there's more space than the camera needs, just use the chosen distance. (less than because camera distance is negative.)
@@ -108,9 +108,9 @@ public class ThirdPersonCameraController : PlayerCameraController
                     ChangeCameraOffset(chosenCamDistance);
                 }
                 //Prevent the camera going ahead of the player.
-                if(newCamDistance > 0)
+                else if(newCamDistance > 0)
                 {
-
+                    ChangeCameraOffset(0);
                 }
                 //If there's still not enough space, use what is available.
                 else
