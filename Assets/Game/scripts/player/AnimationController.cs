@@ -36,7 +36,18 @@ public class AnimationController : MonoBehaviour {
                 attachedAnimator.SetBool("running", false);
             }
         }
+        else
+        {
+            StopAnimations();
+        }
 	}
+
+    void StopAnimations()
+    {
+        attachedAnimator.SetFloat("verticalSpeed", 0f);
+        attachedAnimator.SetFloat("horizontalSpeed", 0f);
+        attachedAnimator.SetBool("running", false);
+    }
 
     void StopJumping()
     {
