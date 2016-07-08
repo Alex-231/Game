@@ -4,6 +4,11 @@ using System;
 
 public class CameraModeController : MonoBehaviour
 {
+    void ClassDebug()
+    {
+        //Debug.
+    }
+
     public GameObject camPoint;
 
     //how close the camera can be to directly overhead or underfoot.
