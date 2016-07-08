@@ -153,6 +153,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
     }
 
+    void ChangeCameraDistance(float newLocation)
     {
         cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, newLocation);
     }
