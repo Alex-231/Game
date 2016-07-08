@@ -12,6 +12,13 @@ public class ThirdPersonCameraController : PlayerCameraController
     //This variable is used for cameras using the UpdateCameraDistance method.
     public float chosenCamDistance;
 
+    //override position and rotation in construct.
+    public ThirdPersonCameraController()
+    {
+        camStartingPos = new Vector3(0, 0, -5f);
+        pointStartingPos = new Vector3(0, 2f, 0);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -20,28 +27,13 @@ public class ThirdPersonCameraController : PlayerCameraController
         UpdateCameraDistance();
     }
 
-    //override position and rotation in construct.
-    public ThirdPersonCameraController()
-    {
-        camStartingPos = new Vector3(0, 0, -5f);
-        pointStartingPos = new Vector3(0, 2f, 0);
-    }
-
-    //Add chosenCamDistance assignment to the inherited start method.
-    public void Start()
-    {
-        base.Start();
-
-        chosenCamDistance = cam.transform.localPosition.z;
-    }
-
     /*This method could be improved.
     Currently, it runs even if there's no output, because it is used to keep the camera inside walls.
     However, the KeepCameraInsideWalls method can be called directly anywhere, and calling that directly on update as well as here would probably be more suitable.
     That way, this method could continue only if there's input.
-    
+
     For an example of the desired implementation, see commit 235a351 on alex_test*/
-    
+
     public void RotateCamera()
     {
         float _yRot = Input.GetAxisRaw("Mouse X");
@@ -65,6 +57,14 @@ public class ThirdPersonCameraController : PlayerCameraController
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);
+    }
+
+    //Add chosenCamDistance assignment to the inherited start method.
+    public void Start()
+    {
+        base.Start();
+
+        chosenCamDistance = cam.transform.localPosition.z;
     }
 
     public void RotatePlayer(float _yRot)
