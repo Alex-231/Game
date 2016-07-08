@@ -186,14 +186,13 @@ public class ThirdPersonCameraController : PlayerCameraController
             //If there's not enough space for the desired camera distance, use what is available.
             if(_hitWall)
             {
-                chosenCamDistance = -objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
+                ChangeCameraOffset(-objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent));
             }
             else
             {
                 chosenCamDistance = _proposedNewLocation;
+                ChangeCameraOffset(chosenCamDistance);
             }
-
-            ChangeCameraOffset(chosenCamDistance);
         }
     }
 }
