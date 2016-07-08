@@ -2,7 +2,6 @@
 
 [RequireComponent(typeof(AnimationController))]
 [RequireComponent(typeof(MovementController))]
-[RequireComponent(typeof(PlayerOptions))]
 public class Player : MonoBehaviour {
 
     public bool lockCursor = true;
@@ -17,9 +16,4 @@ public class Player : MonoBehaviour {
 
         this.gameObject.tag = "localPlayer";
     }
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
 }
