@@ -118,6 +118,10 @@ public class ThirdPersonCameraController : PlayerCameraController
                     ChangeCameraOffset(newCamDistance);
                 }
             }
+            else
+            {
+                ChangeCameraOffset(chosenCamDistance);
+            }
         }
     }
     
