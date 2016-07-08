@@ -8,6 +8,8 @@ public class FlyCameraController : ThirdPersonCameraController
     {
         base.Start();
 
+        base.preventMovement = true;
+
         movController = playerTransform.gameObject.GetComponent<MovementController>();
         movController.enabled = false;
     }
@@ -46,7 +48,11 @@ public class FlyCameraController : ThirdPersonCameraController
         float _movX = Input.GetAxis("Horizontal");
         float _movZ = Input.GetAxis("Vertical");
 
-        camPoint.transform.Translate(new Vector3(_movX, 0, _movZ));
+        Vector3 movement = new Vector3(_movX, 0, _movZ);
+        //Slow it down a little.
+        movement *= 0.5f;
+
+        camPoint.transform.Translate(movement);
     }
 
     //The fly camera disables movement, so when it's destroyed movement needs to be re-enabled.

@@ -9,6 +9,7 @@ public class SceneOverviewCameraController : CameraController {
     void Start () {
         parentTransform = GameObject.Find("_SceneOverview").transform;
         base.parent = parentTransform;
+        base.preventMovement = true;
 
         base.Start();
     }

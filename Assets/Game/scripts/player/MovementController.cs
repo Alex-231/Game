@@ -173,7 +173,11 @@ public class MovementController : MonoBehaviour
         }
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
-        grounded = (characterController.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
+
+        if (!camController.preventMovement)
+        {
+            grounded = (characterController.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
+        }
     }
 
     void Update()

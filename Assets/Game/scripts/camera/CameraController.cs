@@ -16,6 +16,7 @@ abstract public class CameraController : MonoBehaviour
 
     public CameraModeController modeController;
     public Transform parent = null;
+    public bool preventMovement = false;
 
     public void Start()
     {
