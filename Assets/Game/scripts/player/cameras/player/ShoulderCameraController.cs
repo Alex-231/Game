@@ -34,8 +34,7 @@ public class ShoulderCameraController : ThirdPersonCameraController {
         Vector3 _camPointRotate = new Vector3(_xRot, 0f, 0f) * modeController.firstPersonCamSettings.lookSensitivity;
 
         _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-        _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-        //KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+        KeepCameraRotationWithinWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);

@@ -42,33 +42,36 @@ public class ThirdPersonCameraController : PlayerCameraController
         chosenCamDistance = cam.transform.localPosition.z;
     }
 
+    /*This method could be improved.
+    Currently, it runs even if there's no output, because it is used to keep the camera inside walls.
+    However, the KeepCameraInsideWalls method can be called directly anywhere, and calling that directly on update as well as here would probably be more suitable.
+    That way, this method could continue only if there's input.
+    
+    For an example of the desired implementation, see commit 235a351 on alex_test*/
+    
     public void RotateCamera()
     {
         float _yRot = Input.GetAxisRaw("Mouse X");
         float _xRot = Input.GetAxisRaw("Mouse Y");
 
-        if (_xRot != 0 || _yRot != 0 || walking)
+        if (walking)
         {
-            if (walking)
-            {
-                RotatePlayer(_yRot);
-                _yRot = 0;
-            }
-
-            if (modeController.thirdPersonCamSettings.inverted)
-            {
-                _xRot = -_xRot;
-            }
-
-            Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
-
-            _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-            //KeepCameraInsideWalls(_camPointRotate);
-
-            //Apply rotation
-            camPoint.transform.Rotate(_camPointRotate);
+            RotatePlayer(_yRot);
+            _yRot = 0;
         }
+
+        if (modeController.thirdPersonCamSettings.inverted)
+        {
+            _xRot = -_xRot;
+        }
+
+        Vector3 _camPointRotate = new Vector3(_xRot, _yRot, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
+
+        _camPointRotate = ApplyXBufferToRotation(camPoint.transform.eulerAngles, _camPointRotate);
+        KeepCameraRotationWithinWalls(camPoint.transform.eulerAngles, _camPointRotate);
+
+        //Apply rotation
+        camPoint.transform.Rotate(_camPointRotate);
     }
 
     public void RotatePlayer(float _yRot)
@@ -79,9 +82,6 @@ public class ThirdPersonCameraController : PlayerCameraController
         characterController.transform.Rotate(_rotation);
     }
 
-
-    //Some camera controllers aren't very friendly, and the KeepCameraInsideWalls rotation method just isn't enough.
-    //This method works though, so if a controller is clipping through a wall every frame, add this to the update. Should fix it.
     public void KeepCameraInsideWalls(Vector3 _castToPos)
     {
         RaycastHit objectHitInfo = new RaycastHit();
@@ -120,10 +120,11 @@ public class ThirdPersonCameraController : PlayerCameraController
             }
         }
     }
-
-    public Vector3 ApplyCameraPaddingToRotation(Vector3 _currentRotation, Vector3 _rotation)
+    
+    //Creates game objects to calculate where a rotation will move the camera and cam point, and uses these objects to call the KeepInWalls method before actually rotating.
+    //This prevents the camera from jumping around as it calculates where both position and rotation needs to be.
+    public void KeepCameraRotationWithinWalls(Vector3 _currentRotation, Vector3 _rotation)
     {
-        #region prepare desired game objects
         //Create a couple of empty gameobjects for calculations.
         GameObject _desiredCamPoint = new GameObject("_desiredCamPoint");
         GameObject _desiredCam = new GameObject("_desiredCam");
@@ -140,32 +141,12 @@ public class ThirdPersonCameraController : PlayerCameraController
 
         //Rotate the empty gameobject by the desired amount.
         _desiredCamPoint.transform.Rotate(_rotation);
-        #endregion
 
-        #region Overlap sphere and correct rotation.
-        //float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
+        //Call the KeepCameraInsideWalls for the desired position after rotation.
+        KeepCameraInsideWalls(_desiredCam.transform.position);
 
-        //Overlap sphere onto desired camera position.
-        Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPaddingPercent, ~modeController.thirdPersonCamSettings.transparent);
-        if (collisions.Length > 0)
-        {
-            foreach (Collider collision in collisions)
-            {
-                Debug.DrawLine(collision.ClosestPointOnBounds(_desiredCam.transform.position), _desiredCam.transform.position, Color.red);
-                //KeepCameraInsideWalls(collision.ClosestPointOnBounds(_desiredCam.transform.position));
-                KeepCameraInsideWalls(_desiredCam.transform.position);
-            }
-        }
-        else
-        {
-            KeepCameraInsideWalls(_desiredCam.transform.position);
-        }
-
-        #endregion
-
+        //Destroy the temporary game objects.
         Destroy(_desiredCamPoint);
-
-        return _rotation;
     }
 
     //Centers the campoint on Axis Y.
@@ -187,14 +168,25 @@ public class ThirdPersonCameraController : PlayerCameraController
             float _proposedNewLocation = cam.transform.localPosition.z + Input.GetAxisRaw("Mouse ScrollWheel") * modeController.thirdPersonCamSettings.distanceMoveSpeed;
 
             //Camera distances are negative because the camera is behind the player dingus.
+            //Check if the new distance is above or below the max/min.
 
             if (_proposedNewLocation < -modeController.thirdPersonCamSettings.maxDistance)
             {
-                chosenCamDistance = -modeController.thirdPersonCamSettings.maxDistance;
+                _proposedNewLocation = -modeController.thirdPersonCamSettings.maxDistance;
             }
             else if (_proposedNewLocation > -modeController.thirdPersonCamSettings.minDistance)
             {
-                chosenCamDistance = -modeController.thirdPersonCamSettings.minDistance;
+                _proposedNewLocation = -modeController.thirdPersonCamSettings.minDistance;
+            }
+
+            //Now raycast to check if the distance is valid.
+
+            RaycastHit objectHitInfo;
+            bool _hitWall = Physics.Raycast(transform.position, (cam.transform.position - transform.position).normalized, out objectHitInfo/*, _proposedNewLocation*/, ~modeController.thirdPersonCamSettings.transparent);
+            //If there's not enough space for the desired camera distance, use what is available.
+            if(_hitWall)
+            {
+                chosenCamDistance = -objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
             }
             else
             {

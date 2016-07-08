@@ -41,11 +41,9 @@ public class DogsLifeCameraController : ThirdPersonCameraController
         Vector3 _camPointRotate = new Vector3(0, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
         Vector3 _camRotate = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
-        _camPointRotate = ApplyCameraPaddingToRotation(camPoint.transform.eulerAngles, _camPointRotate);
-        //KeepCameraInsideWalls(camPoint.transform.eulerAngles, _camPointRotate);
+        KeepCameraRotationWithinWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
         _camRotate = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camRotate);
-        //KeepCameraInsideWalls(cam.transform.eulerAngles, _camRotate);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);
