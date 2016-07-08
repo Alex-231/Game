@@ -22,17 +22,19 @@ public class ShoulderCameraController : ThirdPersonCameraController {
         LockCamPointZRotation();
     }
 
-    public void ChangeCameraOffset(float newLocation)
+    public void ChangeCameraOffsetBasedOnCollision(Vector3 _CollisionPosition)
     {
-        cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, newLocation);
+        //calculate the local position.
+        _CollisionPosition = camPoint.transform.InverseTransformPoint(_CollisionPosition);
+        //Apply padding percentage.
+        _CollisionPosition *= (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
+
+        Vector3 newLocation = _CollisionPosition;
+        cam.transform.localPosition = newLocation;
     }
 
     public override void KeepCameraInsideWalls(Vector3 _castToPos)
     {
-        Debug.DrawRay(transform.position, (new Vector3(cam.transform.position.x, cam.transform.position.y, 0) - transform.position), Color.red);
-        Debug.DrawRay(transform.position, (new Vector3(0, cam.transform.position.y, cam.transform.position.z) - transform.position), Color.magenta);
-        Debug.DrawRay(transform.position, (new Vector3(cam.transform.position.x, cam.transform.position.y, cam.transform.position.z) - transform.position), Color.green);
-
         RaycastHit objectHitInfo = new RaycastHit();
         float castDistance = Vector3.Distance(transform.position, _castToPos);
 
@@ -41,7 +43,7 @@ public class ShoulderCameraController : ThirdPersonCameraController {
         float newCamDistance = (cam.transform.localPosition.z - (objectHitInfo.distance - castDistance)) * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
         if (hitWall)
         {
-            ChangeCameraDistance(newCamDistance);
+            ChangeCameraOffsetBasedOnCollision(objectHitInfo.point);
         }
         //If no collision is found, cast with infinate distance, to figure out where the camera can go.
         else
@@ -54,23 +56,23 @@ public class ShoulderCameraController : ThirdPersonCameraController {
                 //If there's more space than the camera needs, just use the chosen distance. (less than because camera distance is negative.)
                 if (newCamDistance <= chosenCamDistance)
                 {
-                    ChangeCameraDistance(chosenCamDistance);
+                    cam.transform.localPosition = camStartingPos;
                 }
                 //Prevent the camera going ahead of the player.
                 else if (newCamDistance > 0)
                 {
-                    ChangeCameraDistance(0);
+                    
                 }
                 //If there's still not enough space, use what is available.
                 else
                 {
-                    ChangeCameraDistance(newCamDistance);
+                    ChangeCameraOffsetBasedOnCollision(objectHitInfo.point);
                 }
             }
             //If neither raycast hit anything, there's enough space to use the chosen cam distance.
             else
             {
-                ChangeCameraDistance(chosenCamDistance);
+                cam.transform.localPosition = camStartingPos;
             }
         }
     }
