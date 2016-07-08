@@ -87,22 +87,26 @@ public class ThirdPersonCameraController : PlayerCameraController
         RaycastHit objectHitInfo = new RaycastHit();
         float castDistance = Vector3.Distance(transform.position, _castToPos);
 
+        //This cast checks if anything is inbetween transform.position and _castToPos (the camPoint and the _desiredCam).
         bool hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, castDistance, ~modeController.thirdPersonCamSettings.transparent);
         float newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
         if (hitWall)
         {
             ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - castDistance));
         }
+        //If no collision is found, cast with infinate distance, to figure out where the camera can go.
         else
         {
-            hitWall = Physics.Raycast(transform.position, transform.position - _castToPos, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
+            hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
             newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
             if (hitWall)
             {
-                if (newCamDistance < chosenCamDistance)
+                //If there's more space than the camera needs, just use the chosen distance. (less than because camera distance is negative.)
+                if (newCamDistance <= chosenCamDistance)
                 {
                     ChangeCameraOffset(chosenCamDistance);
                 }
+                //If there's still not enough space, use what is available.
                 else
                 {
                     ChangeCameraOffset(newCamDistance);
@@ -142,7 +146,8 @@ public class ThirdPersonCameraController : PlayerCameraController
             foreach (Collider collision in collisions)
             {
                 Debug.DrawLine(collision.ClosestPointOnBounds(_desiredCam.transform.position), _desiredCam.transform.position, Color.red);
-                KeepCameraInsideWalls(collision.ClosestPointOnBounds(_desiredCam.transform.position));
+                //KeepCameraInsideWalls(collision.ClosestPointOnBounds(_desiredCam.transform.position));
+                KeepCameraInsideWalls(_desiredCam.transform.position);
             }
         }
         else
