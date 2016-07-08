@@ -75,7 +75,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         characterController.transform.Rotate(_rotation);
     }
 
-    public void KeepCameraInsideWalls(Vector3 _castToPos)
+    public virtual void KeepCameraInsideWalls(Vector3 _castToPos)
     {
         RaycastHit objectHitInfo = new RaycastHit();
         float castDistance = Vector3.Distance(transform.position, _castToPos);
@@ -85,7 +85,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         float newCamDistance = (cam.transform.localPosition.z - (objectHitInfo.distance - castDistance)) * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
         if (hitWall)
         {
-            ChangeCameraOffset(newCamDistance);
+            ChangeCameraDistance(newCamDistance);
         }
         //If no collision is found, cast with infinate distance, to figure out where the camera can go.
         else
@@ -98,23 +98,23 @@ public class ThirdPersonCameraController : PlayerCameraController
                 //If there's more space than the camera needs, just use the chosen distance. (less than because camera distance is negative.)
                 if (newCamDistance <= chosenCamDistance)
                 {
-                    ChangeCameraOffset(chosenCamDistance);
+                    ChangeCameraDistance(chosenCamDistance);
                 }
                 //Prevent the camera going ahead of the player.
                 else if(newCamDistance > 0)
                 {
-                    ChangeCameraOffset(0);
+                    ChangeCameraDistance(0);
                 }
                 //If there's still not enough space, use what is available.
                 else
                 {
-                    ChangeCameraOffset(newCamDistance);
+                    ChangeCameraDistance(newCamDistance);
                 }
             }
             //If neither raycast hit anything, there's enough space to use the chosen cam distance.
             else
             {
-                ChangeCameraOffset(chosenCamDistance);
+                ChangeCameraDistance(chosenCamDistance);
             }
         }
     }
@@ -153,7 +153,6 @@ public class ThirdPersonCameraController : PlayerCameraController
         camPoint.transform.localEulerAngles = new Vector3(camPoint.transform.localEulerAngles.x, 0, 0);
     }
 
-    void ChangeCameraOffset(float newLocation)
     {
         cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, newLocation);
     }
@@ -184,13 +183,13 @@ public class ThirdPersonCameraController : PlayerCameraController
             //If there's not enough space for the desired camera distance, use what is available.
             if(_hitWall)
             {
-                ChangeCameraOffset(-objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent));
+                ChangeCameraDistance(-objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent));
             }
             //else, use the chosen position.
             else
             {
                 chosenCamDistance = _proposedNewLocation;
-                ChangeCameraOffset(chosenCamDistance);
+                ChangeCameraDistance(chosenCamDistance);
             }
         }
     }
