@@ -21,8 +21,7 @@ public class CameraModeController : MonoBehaviour
         FlyCam = 4,
         Static = 5,
         Follow = 6,
-        DogsLife = 7,
-        SceneOverview = 8
+        SceneOverview = 7
     }
 
     public CameraModes selectedCameraMode = CameraModes.ThirdPerson;
@@ -110,9 +109,9 @@ public class CameraModeController : MonoBehaviour
             case CameraModes.Follow:
                 gameObject.AddComponent<FollowCameraController>();
                 break;
-            case CameraModes.DogsLife:
-                gameObject.AddComponent<DogsLifeCameraController>();
-                break;
+            //case CameraModes.DogsLife:
+            //    gameObject.AddComponent<DogsLifeCameraController>();
+            //    break;
             case CameraModes.SceneOverview:
                 gameObject.AddComponent<SceneOverviewCameraController>();
                 break;

@@ -3,12 +3,6 @@ using System.Collections;
 
 public class ThirdPersonCameraController : PlayerCameraController
 {
-    /*
-    TODO:
-    The KeepCameraWithinPadding method needs to change the offset to allow more rotation.
-    Possible Solution: run method, if resulting rotation = Vector3.zero, decrease camera distance and try again.
-    */
-
     //If override walking is enabled, 
     public bool overrideWalking = true;
 
@@ -24,7 +18,6 @@ public class ThirdPersonCameraController : PlayerCameraController
         RotateCamera();
         LockCamPointZRotation();
         UpdateCameraDistance();
-        //KeepCameraInsideWalls();
     }
 
     //override position and rotation in construct.
@@ -118,6 +111,7 @@ public class ThirdPersonCameraController : PlayerCameraController
                     ChangeCameraOffset(newCamDistance);
                 }
             }
+            //If neither raycast hit anything, there's enough space to use the chosen cam distance.
             else
             {
                 ChangeCameraOffset(chosenCamDistance);
@@ -192,6 +186,7 @@ public class ThirdPersonCameraController : PlayerCameraController
             {
                 ChangeCameraOffset(-objectHitInfo.distance * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent));
             }
+            //else, use the chosen position.
             else
             {
                 chosenCamDistance = _proposedNewLocation;

@@ -3,6 +3,7 @@ using System.Collections;
 
 /// <summary>
 /// A camera controller loosly based on the game Dog's Life for the PS2.
+/// THIS CONTROLLER IS BROKEN AND NO LONGER SUPPORTED.
 /// </summary>
 public class DogsLifeCameraController : ThirdPersonCameraController
 {
@@ -19,7 +20,6 @@ public class DogsLifeCameraController : ThirdPersonCameraController
         UpdateCameraDistance();
         RotateCamera();
         LockCamZRotation();
-        //KeepCameraInsideWalls();
     }
 
     void RotateCamera()
@@ -41,9 +41,9 @@ public class DogsLifeCameraController : ThirdPersonCameraController
         Vector3 _camPointRotate = new Vector3(0, _yRot, 0f) * modeController.thirdPersonCamSettings.lookSensetivity;
         Vector3 _camRotate = new Vector3(_xRot, 0, 0) * modeController.thirdPersonCamSettings.lookSensetivity;
 
-        KeepCameraRotationWithinWalls(camPoint.transform.eulerAngles, _camPointRotate);
-
         _camRotate = ApplyXBufferToRotation(cam.transform.rotation.eulerAngles, _camRotate);
+
+        KeepCameraRotationWithinWalls(camPoint.transform.eulerAngles, _camPointRotate);
 
         //Apply rotation
         camPoint.transform.Rotate(_camPointRotate);
