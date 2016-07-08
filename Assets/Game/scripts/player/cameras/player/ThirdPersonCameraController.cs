@@ -89,22 +89,28 @@ public class ThirdPersonCameraController : PlayerCameraController
 
         //This cast checks if anything is inbetween transform.position and _castToPos (the camPoint and the _desiredCam).
         bool hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, castDistance, ~modeController.thirdPersonCamSettings.transparent);
-        float newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
+        float newCamDistance = (cam.transform.localPosition.z - (objectHitInfo.distance - castDistance)) * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
         if (hitWall)
         {
-            ChangeCameraOffset(cam.transform.localPosition.z - (objectHitInfo.distance - castDistance));
+            ChangeCameraOffset(newCamDistance);
         }
         //If no collision is found, cast with infinate distance, to figure out where the camera can go.
         else
         {
             hitWall = Physics.Raycast(transform.position, (_castToPos - transform.position).normalized, out objectHitInfo, ~modeController.thirdPersonCamSettings.transparent);
-            newCamDistance = cam.transform.localPosition.z - (objectHitInfo.distance - castDistance);
+            //Update the newCamDistance for the last raycast.
+            newCamDistance = (cam.transform.localPosition.z - (objectHitInfo.distance - castDistance)) * (1 - modeController.thirdPersonCamSettings.cameraPaddingPercent);
             if (hitWall)
             {
                 //If there's more space than the camera needs, just use the chosen distance. (less than because camera distance is negative.)
                 if (newCamDistance <= chosenCamDistance)
                 {
                     ChangeCameraOffset(chosenCamDistance);
+                }
+                //Prevent the camera going ahead of the player.
+                if(newCamDistance > 0)
+                {
+
                 }
                 //If there's still not enough space, use what is available.
                 else
@@ -140,7 +146,7 @@ public class ThirdPersonCameraController : PlayerCameraController
         //float cameraDistance = Vector3.Distance(_desiredCamPoint.transform.position, _desiredCam.transform.position);
 
         //Overlap sphere onto desired camera position.
-        Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPadding, ~modeController.thirdPersonCamSettings.transparent);
+        Collider[] collisions = Physics.OverlapSphere(_desiredCam.transform.position, modeController.thirdPersonCamSettings.cameraPaddingPercent, ~modeController.thirdPersonCamSettings.transparent);
         if (collisions.Length > 0)
         {
             foreach (Collider collision in collisions)
